@@ -25,6 +25,6 @@ class SocketProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../files/socket' => base_path('socket'),
             __DIR__ . '/../files/routes.php' => base_path('routes/socket.php'),
-        ], 'server');
+        ], 'socket');
     }
 }
