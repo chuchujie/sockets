@@ -42,7 +42,7 @@ class SocketServer implements MessageComponentInterface
      * @param  ConnectionInterface $conn The socket/connection that just connected to your application
      * @throws \Exception
      */
-    function onOpen(ConnectionInterface $conn)
+    public function onOpen(ConnectionInterface $conn)
     {
         $client = new SocketClient($conn);
 
@@ -56,7 +56,7 @@ class SocketServer implements MessageComponentInterface
      * @param  ConnectionInterface $conn The socket/connection that is closing/closed
      * @throws \Exception
      */
-    function onClose(ConnectionInterface $conn)
+    public function onClose(ConnectionInterface $conn)
     {
         $client = array_first($this->clients, function(SocketClient $client) use ($conn) { return $client->equals($conn); });
 
@@ -70,7 +70,7 @@ class SocketServer implements MessageComponentInterface
      * @param  \Exception $e
      * @throws \Exception
      */
-    function onError(ConnectionInterface $conn, \Exception $e)
+    public function onError(ConnectionInterface $conn, \Exception $e)
     {
     }
 
@@ -80,7 +80,7 @@ class SocketServer implements MessageComponentInterface
      * @param  string $msg The message received
      * @throws \Exception
      */
-    function onMessage(ConnectionInterface $from, $msg)
+    public function onMessage(ConnectionInterface $from, $msg)
     {
     }
 }
