@@ -16,6 +16,13 @@ class SocketServer implements MessageComponentInterface
      */
     private $app;
 
+    /**
+     * The connected clients.
+     *
+     * @var array
+     */
+    private $clients = [];
+
     public function __construct(Application $app)
     {
         $this->app = $app;
@@ -28,7 +35,11 @@ class SocketServer implements MessageComponentInterface
      */
     function onOpen(ConnectionInterface $conn)
     {
-        $this->app->make('events')->fire(new SocketConnectedEvent);
+        $client = new SocketClient($conn);
+
+        $this->clients[] = $client;
+
+        $this->app->make('events')->fire(new SocketConnectedEvent($client));
     }
 
     /**
@@ -38,7 +49,9 @@ class SocketServer implements MessageComponentInterface
      */
     function onClose(ConnectionInterface $conn)
     {
-        $this->app->make('event')->fire(new SocketDisconnectedEvent);
+        $client = array_first($this->clients, function(SocketClient $client) use ($conn) { return $client->equals($conn); });
+
+        $this->app->make('events')->fire(new SocketDisconnectedEvent($client));
     }
 
     /**
