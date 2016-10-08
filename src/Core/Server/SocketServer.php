@@ -3,6 +3,7 @@
 
 namespace Experus\Sockets\Core\Server;
 
+use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Events\SocketConnectedEvent;
 use Experus\Sockets\Events\SocketDisconnectedEvent;
 use Illuminate\Contracts\Foundation\Application;

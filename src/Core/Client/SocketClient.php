@@ -1,7 +1,7 @@
 <?php
 // Created by dealloc. All rights reserved.
 
-namespace Experus\Sockets\Core\Server;
+namespace Experus\Sockets\Core\Client;
 
 use Ratchet\ConnectionInterface as Socket;
 

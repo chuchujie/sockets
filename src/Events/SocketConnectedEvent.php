@@ -3,7 +3,7 @@
 
 namespace Experus\Sockets\Events;
 
-use Experus\Sockets\Core\Server\SocketClient;
+use Experus\Sockets\Core\Client\SocketClient;
 
 class SocketConnectedEvent
 {
