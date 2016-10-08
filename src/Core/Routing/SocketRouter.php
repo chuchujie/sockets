@@ -14,6 +14,31 @@ use Experus\Sockets\Contracts\Routing\Router;
 class SocketRouter implements Router
 {
     /**
+     * Internal name for the global (unnamed) channel.
+     */
+    const GLOBAL_CHANNEL = '__global__';
+
+    /**
+     * All channels currently registered in the application.
+     *
+     * @var array
+     */
+    private $channels = [];
+
+    /**
+     * Reference to the current channel we're working in.
+     *
+     * @var array
+     */
+    private $current;
+
+    public function __construct()
+    {
+        $this->channels[self::GLOBAL_CHANNEL] = [];
+        $this->current = &$this->channels[self::GLOBAL_CHANNEL];
+    }
+
+    /**
      * Register the uri in the router.
      *
      * @param string $uri
@@ -22,6 +47,8 @@ class SocketRouter implements Router
      */
     public function socket($uri, $action)
     {
+        $this->current[$uri] = $action;
+
         return $this;
     }
 
@@ -40,12 +67,24 @@ class SocketRouter implements Router
     /**
      * Group a set of routes in the same channel.
      *
-     * @param array $attributes The attributes of this channel.
+     * @param array|string $attributes The attributes of this channel.
      * @param Closure $callback
      * @return Router
      */
-    public function channel(array $attributes = [], Closure $callback)
+    public function channel($attributes, Closure $callback)
     {
+        $name = (is_array($attributes) ? $attributes['name'] : $attributes);
+
+        if (!array_key_exists($name, $this->channels)) {
+            $this->channels[$name] = [];
+        }
+
+        $this->current = &$this->channels[$name];
+
+        $callback($this);
+
+        $this->current = &$this->channels[self::GLOBAL_CHANNEL];
+
         return $this;
     }
 }

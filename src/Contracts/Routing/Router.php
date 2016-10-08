@@ -32,9 +32,9 @@ interface Router
     /**
      * Group a set of routes in the same channel.
      *
-     * @param array $attributes The attributes of this channel.
+     * @param array|string $attributes The attributes of this channel.
      * @param Closure $callback
      * @return Router
      */
-    public function channel(array $attributes = [], Closure $callback);
+    public function channel($attributes, Closure $callback);
 }
