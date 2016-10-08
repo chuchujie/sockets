@@ -4,6 +4,7 @@
 namespace Experus\Sockets\Core;
 
 use Experus\Sockets\Contracts\Kernel;
+use Experus\Sockets\Contracts\Routing\Router;
 use Illuminate\Contracts\Foundation\Application;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
@@ -56,6 +57,13 @@ class SocketKernel implements Kernel
      */
     private $server;
 
+    /**
+     * The socket router.
+     *
+     * @var Router
+     */
+    private $router;
+
     public function __construct(Application $app)
     {
         $this->app = $app;
@@ -74,8 +82,10 @@ class SocketKernel implements Kernel
     {
         $this->input = $input;
         $this->output = $output;
-
         $this->server = $this->app->make(\Ratchet\MessageComponentInterface::class);
+        $this->router = $this->app->make(Router::class);
+
+        $this->initRouter();
 
         return $this;
     }
@@ -94,5 +104,12 @@ class SocketKernel implements Kernel
         if (!$this->app->hasBeenBootstrapped()) {
             $this->app->bootstrapWith($this->bootstrappers);
         }
+    }
+
+    private function initRouter()
+    {
+        $router = $this->router;
+
+        require $this->app->basePath() . '/routes/socket.php';
     }
 }
