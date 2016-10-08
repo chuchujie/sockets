@@ -15,6 +15,7 @@
         }
     },
     "require": {
-        "illuminate/support": "^5.3"
+        "illuminate/support": "^5.3",
+        "symfony/console": "^3.1"
     }
 }
