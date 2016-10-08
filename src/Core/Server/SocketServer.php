@@ -3,11 +3,24 @@
 
 namespace Experus\Sockets\Core\Server;
 
+use Experus\Sockets\Events\SocketConnectedEvent;
+use Experus\Sockets\Events\SocketDisconnectedEvent;
+use Illuminate\Contracts\Foundation\Application;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 
 class SocketServer implements MessageComponentInterface
 {
+    /**
+     * @var Application
+     */
+    private $app;
+
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * When a new connection is opened it will be passed to this method
      * @param  ConnectionInterface $conn The socket/connection that just connected to your application
@@ -15,6 +28,7 @@ class SocketServer implements MessageComponentInterface
      */
     function onOpen(ConnectionInterface $conn)
     {
+        $this->app->make('event')->fire(new SocketConnectedEvent);
     }
 
     /**
@@ -24,6 +38,7 @@ class SocketServer implements MessageComponentInterface
      */
     function onClose(ConnectionInterface $conn)
     {
+        $this->app->make('event')->fire(new SocketDisconnectedEvent);
     }
 
     /**
