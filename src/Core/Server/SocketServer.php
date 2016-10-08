@@ -28,7 +28,7 @@ class SocketServer implements MessageComponentInterface
      */
     function onOpen(ConnectionInterface $conn)
     {
-        $this->app->make('event')->fire(new SocketConnectedEvent);
+        $this->app->make('events')->fire(new SocketConnectedEvent);
     }
 
     /**
