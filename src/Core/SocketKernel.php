@@ -4,7 +4,10 @@
 namespace Experus\Sockets\Core;
 
 use Experus\Sockets\Contracts\Kernel;
+use Experus\Sockets\Core\Server\SocketServer;
 use Illuminate\Contracts\Foundation\Application;
+use Ratchet\Server\IoServer;
+use Ratchet\WebSocket\WsServer;
 use Symfony\Component\Console\Input\InputInterface as Input;
 use Symfony\Component\Console\Output\OutputInterface as Output;
 
@@ -47,6 +50,13 @@ class SocketKernel implements Kernel
      */
     private $output;
 
+    /**
+     * The running socket server.
+     *
+     * @var SocketServer
+     */
+    private $server;
+
     public function __construct(Application $app)
     {
         $this->app = $app;
@@ -66,6 +76,8 @@ class SocketKernel implements Kernel
         $this->input = $input;
         $this->output = $output;
 
+        $this->server = $this->app->make(SocketServer::class);
+
         return $this;
     }
 
@@ -75,6 +87,7 @@ class SocketKernel implements Kernel
     public function listen()
     {
         $this->output->writeln('TODO listen to incoming socket connections and bind them into the laravel runtime.');
+        IoServer::factory(new WsServer($this->server), 9999)->run();
     }
 
     private function bootstrap()
