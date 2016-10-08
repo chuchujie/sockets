@@ -4,7 +4,6 @@
 namespace Experus\Sockets\Core;
 
 use Experus\Sockets\Contracts\Kernel;
-use Experus\Sockets\Core\Server\SocketServer;
 use Illuminate\Contracts\Foundation\Application;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
@@ -53,7 +52,7 @@ class SocketKernel implements Kernel
     /**
      * The running socket server.
      *
-     * @var SocketServer
+     * @var \Ratchet\MessageComponentInterface
      */
     private $server;
 
@@ -76,7 +75,7 @@ class SocketKernel implements Kernel
         $this->input = $input;
         $this->output = $output;
 
-        $this->server = $this->app->make(SocketServer::class);
+        $this->server = $this->app->make(\Ratchet\MessageComponentInterface::class);
 
         return $this;
     }
