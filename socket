@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Load Laravel
+|--------------------------------------------------------------------------
+|
+| We load the laravel runtime so that we can illuminate stuff.
+|
+*/
+require __DIR__.'/bootstrap/autoload.php';
+
+$app = require_once __DIR__.'/bootstrap/app.php';

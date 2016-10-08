@@ -14,5 +14,7 @@
             "Experus\\Sockets\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "illuminate/support": "^5.3"
+    }
 }
