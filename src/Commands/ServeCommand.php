@@ -13,7 +13,7 @@ class ServeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'socket:serve';
+    protected $signature = 'socket:serve {--port= : The port on which the socket server should listen.} {--local : Wether the socket server should only listen to local connections.}';
 
     /**
      * The console command description.

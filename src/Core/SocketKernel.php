@@ -96,8 +96,8 @@ class SocketKernel implements Kernel
      */
     public function listen()
     {
-        $this->output->writeln('Listening for incoming connections on port 9999');
-        IoServer::factory(new HttpServer(new WsServer($this->server)), 9999)->run();
+        $this->output->writeln('Listening for incoming connections on ' . $this->getHost() . ':' . $this->getPort());
+        IoServer::factory(new HttpServer(new WsServer($this->server)), $this->getPort(), $this->getHost())->run();
     }
 
     private function bootstrap()
@@ -112,5 +112,27 @@ class SocketKernel implements Kernel
         $router = $this->router;
 
         require $this->app->basePath() . '/routes/socket.php';
+    }
+
+    private function getPort()
+    {
+        $option = $this->input->getOption('port');
+
+        if (!empty($option)) {
+            return $option;
+        }
+
+        return 9999;
+    }
+
+    private function getHost()
+    {
+        $option = $this->input->getOption('local');
+
+        if ($option) {
+            return '127.0.0.1';
+        }
+
+        return '0.0.0.0';
     }
 }
