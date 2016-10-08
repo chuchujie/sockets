@@ -116,7 +116,7 @@ class SocketKernel implements Kernel
 
     private function getPort()
     {
-        $option = $this->input->getOption('port');
+        $option = ($this->input->hasOption('port') ? $this->input->getOption('port') : '');
 
         if (!empty($option)) {
             return $option;
@@ -127,7 +127,7 @@ class SocketKernel implements Kernel
 
     private function getHost()
     {
-        $option = $this->input->getOption('local');
+        $option = $this->input->hasOption('local') && $this->input->getOption('local');
 
         if ($option) {
             return '127.0.0.1';
