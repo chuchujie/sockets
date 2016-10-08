@@ -29,7 +29,8 @@ class SocketClient
 
     public function write($data)
     {
-        // TODO serialize non-string data
+        $data = json_encode($data);
+
         $this->socket->send($data);
     }
 
