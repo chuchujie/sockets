@@ -28,4 +28,13 @@ interface Router
      * @return Router
      */
     public function group(array $attributes, Closure $callback);
+
+    /**
+     * Group a set of routes in the same channel.
+     *
+     * @param array $attributes The attributes of this channel.
+     * @param Closure $callback
+     * @return Router
+     */
+    public function channel(array $attributes = [], Closure $callback);
 }

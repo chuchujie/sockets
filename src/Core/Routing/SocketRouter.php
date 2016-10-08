@@ -17,7 +17,7 @@ class SocketRouter implements Router
      */
     public function socket($uri, $action)
     {
-        // TODO: Implement socket() method.
+        return $this;
     }
 
     /**
@@ -29,6 +29,18 @@ class SocketRouter implements Router
      */
     public function group(array $attributes, Closure $callback)
     {
-        // TODO: Implement group() method.
+        return $this;
+    }
+
+    /**
+     * Group a set of routes in the same channel.
+     *
+     * @param array $attributes The attributes of this channel.
+     * @param Closure $callback
+     * @return Router
+     */
+    public function channel(array $attributes = [], Closure $callback)
+    {
+        return $this;
     }
 }
