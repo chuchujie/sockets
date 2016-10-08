@@ -5,6 +5,10 @@ namespace Experus\Sockets\Core\Client;
 
 use Ratchet\ConnectionInterface as Socket;
 
+/**
+ * Class SocketClient represents an open connection to a client.
+ * @package Experus\Sockets\Core\Client
+ */
 class SocketClient
 {
     /**
@@ -21,12 +25,21 @@ class SocketClient
      */
     private $uuid;
 
+    /**
+     * SocketClient constructor.
+     * @param Socket $socket the raw Ratchet socket to wrap.
+     */
     public function __construct(Socket $socket)
     {
         $this->socket = $socket;
         $this->uuid = uniqid('socket-', true);
     }
 
+    /**
+     * Write data to the client.
+     *
+     * @param string|array|object $data
+     */
     public function write($data)
     {
         $data = json_encode($data);
@@ -34,6 +47,9 @@ class SocketClient
         $this->socket->send($data);
     }
 
+    /**
+     * Gracefully close the connection to the client.
+     */
     public function close()
     {
         $this->socket->close();
@@ -49,6 +65,12 @@ class SocketClient
         return $this->uuid;
     }
 
+    /**
+     * Compare a raw socket to the wrapped socket.
+     *
+     * @param Socket $socket
+     * @return bool returns true if the raw sockets are equal.
+     */
     public function equals(Socket $socket)
     {
         return ($this->socket == $socket);

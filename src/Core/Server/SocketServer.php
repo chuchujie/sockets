@@ -10,6 +10,10 @@ use Illuminate\Contracts\Foundation\Application;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 
+/**
+ * Class SocketServer is an implementation of the Ratchet MessageComponentInterface and provides the connection layer between Laravel and Ratchet.
+ * @package Experus\Sockets\Core\Server
+ */
 class SocketServer implements MessageComponentInterface
 {
     /**
@@ -24,6 +28,10 @@ class SocketServer implements MessageComponentInterface
      */
     private $clients = [];
 
+    /**
+     * SocketServer constructor.
+     * @param Application $app
+     */
     public function __construct(Application $app)
     {
         $this->app = $app;

@@ -6,6 +6,10 @@ namespace Experus\Sockets\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Foundation\Application;
 
+/**
+ * Class ServeCommand allows running the socket server from the Artisan runtime.
+ * @package Experus\Sockets\Commands
+ */
 class ServeCommand extends Command
 {
     /**

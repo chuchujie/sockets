@@ -12,6 +12,12 @@ use Ratchet\WebSocket\WsServer;
 use Symfony\Component\Console\Input\InputInterface as Input;
 use Symfony\Component\Console\Output\OutputInterface as Output;
 
+/**
+ * Class SocketKernel bootstraps the runtime and manages the socket server.
+ * It exposes the socket as a separate runtime to the Laravel framework.
+ *
+ * @package Experus\Sockets\Core
+ */
 class SocketKernel implements Kernel
 {
     /**
@@ -65,6 +71,10 @@ class SocketKernel implements Kernel
      */
     private $router;
 
+    /**
+     * SocketKernel constructor.
+     * @param Application $app
+     */
     public function __construct(Application $app)
     {
         $this->app = $app;
@@ -100,6 +110,9 @@ class SocketKernel implements Kernel
         IoServer::factory(new HttpServer(new WsServer($this->server)), $this->getPort(), $this->getHost())->run();
     }
 
+    /**
+     * Bootstrap the laravel runtime.
+     */
     private function bootstrap()
     {
         if (!$this->app->hasBeenBootstrapped()) {
@@ -107,13 +120,21 @@ class SocketKernel implements Kernel
         }
     }
 
+    /**
+     * Initialize the router and load the routes.
+     */
     private function initRouter()
     {
-        $router = $this->router;
+        $router = $this->router; // this variable is accessed in the routes file.
 
         require $this->app->basePath() . '/routes/socket.php';
     }
 
+    /**
+     * Get the port on which the socket server will listen for connections.
+     *
+     * @return int|string
+     */
     private function getPort()
     {
         $option = ($this->input->hasOption('port') ? $this->input->getOption('port') : '');
@@ -125,6 +146,11 @@ class SocketKernel implements Kernel
         return 9999;
     }
 
+    /**
+     * Get the host on which the socket server will listen for connections.
+     *
+     * @return string
+     */
     private function getHost()
     {
         $option = $this->input->hasOption('local') && $this->input->getOption('local');

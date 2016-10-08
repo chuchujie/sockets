@@ -6,6 +6,11 @@ namespace Experus\Sockets\Core\Routing;
 use Closure;
 use Experus\Sockets\Contracts\Routing\Router;
 
+/**
+ * Class SocketRouter implements the routing contract for socket routing.
+ *
+ * @package Experus\Sockets\Core\Routing
+ */
 class SocketRouter implements Router
 {
     /**

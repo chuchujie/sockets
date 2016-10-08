@@ -10,8 +10,15 @@ use Experus\Sockets\Core\Server\SocketServer;
 use Illuminate\Support\ServiceProvider;
 use Ratchet\MessageComponentInterface;
 
+/**
+ * Class SocketProvider installs the contracts from the socket package and publishes the required config files.
+ * @package Experus\Sockets
+ */
 class SocketProvider extends ServiceProvider
 {
+    /**
+     * Register the services.
+     */
     public function register()
     {
         $this->app->singleton(MessageComponentInterface::class, SocketServer::class);
@@ -20,6 +27,9 @@ class SocketProvider extends ServiceProvider
         $this->commands([ ServeCommand::class ]);
     }
 
+    /**
+     * Expose the configuration exports.
+     */
     public function boot()
     {
         $this->publishes([

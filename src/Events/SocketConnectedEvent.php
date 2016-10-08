@@ -5,6 +5,10 @@ namespace Experus\Sockets\Events;
 
 use Experus\Sockets\Core\Client\SocketClient;
 
+/**
+ * Class SocketConnectedEvent is fired when a client connects to the application.
+ * @package Experus\Sockets\Events
+ */
 class SocketConnectedEvent
 {
     /**
@@ -12,6 +16,10 @@ class SocketConnectedEvent
      */
     private $client;
 
+    /**
+     * SocketConnectedEvent constructor.
+     * @param SocketClient $client
+     */
     public function __construct(SocketClient $client)
     {
         $this->client = $client;
