@@ -5,6 +5,7 @@ namespace Experus\Sockets\Core\Routing;
 
 use Closure;
 use Experus\Sockets\Contracts\Routing\Router;
+use Experus\Sockets\Core\Server\SocketRequest;
 
 /**
  * Class SocketRouter implements the routing contract for socket routing.
@@ -86,5 +87,18 @@ class SocketRouter implements Router
         $this->current = &$this->channels[self::GLOBAL_CHANNEL];
 
         return $this;
+    }
+
+    /**
+     * Dispatch a route to the according handlers.
+     *
+     * @param SocketRequest $request
+     * @return null The response.
+     */
+    public function dispatch(SocketRequest $request)
+    {
+        dd($request->path());
+
+        return null;
     }
 }

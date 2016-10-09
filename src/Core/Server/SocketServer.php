@@ -3,6 +3,7 @@
 
 namespace Experus\Sockets\Core\Server;
 
+use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Events\SocketConnectedEvent;
@@ -100,6 +101,8 @@ class SocketServer implements Server
         $client = $this->find($from);
         $protocol = $this->protocol($client);
         $request = new SocketRequest($client, $msg, $protocol);
+
+        $this->app->make(Router::class)->dispatch($request);
     }
 
     /**

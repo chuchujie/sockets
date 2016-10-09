@@ -4,6 +4,7 @@
 namespace Experus\Sockets\Contracts\Routing;
 
 use Closure;
+use Experus\Sockets\Core\Server\SocketRequest;
 
 /**
  * Interface Router defines a contract for a Websocket router.
@@ -37,4 +38,12 @@ interface Router
      * @return Router
      */
     public function channel($attributes, Closure $callback);
+
+    /**
+     * Dispatch a route to the according handlers.
+     *
+     * @param SocketRequest $request
+     * @return null The response.
+     */
+    public function dispatch(SocketRequest $request);
 }

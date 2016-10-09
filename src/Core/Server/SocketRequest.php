@@ -82,4 +82,14 @@ class SocketRequest
     {
         return $this->message;
     }
+
+    /**
+     * Get the path this request was send to.
+     *
+     * @return string
+     */
+    public function path()
+    {
+        return $this->protocol->route($this);
+    }
 }
