@@ -5,10 +5,10 @@ namespace Experus\Sockets;
 
 use Experus\Sockets\Commands\ServeCommand;
 use Experus\Sockets\Contracts\Routing\Router;
+use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Routing\SocketRouter;
 use Experus\Sockets\Core\Server\SocketServer;
 use Illuminate\Support\ServiceProvider;
-use Ratchet\MessageComponentInterface;
 
 /**
  * Class SocketProvider installs the contracts from the socket package and publishes the required config files.
@@ -30,7 +30,7 @@ class SocketProvider extends ServiceProvider
      * @var array
      */
     private $bindings = [
-        MessageComponentInterface::class => SocketServer::class,
+        Server::class => SocketServer::class,
         Router::class => SocketRouter::class,
     ];
 
