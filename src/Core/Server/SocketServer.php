@@ -87,7 +87,10 @@ class SocketServer implements Server
      */
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
-        dd([$e->getMessage(), $e->getFile(), $e->getLine()]); // TODO proper error handling
+        dd([
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()]); // TODO proper error handling
     }
 
     /**
