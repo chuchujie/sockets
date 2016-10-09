@@ -89,7 +89,7 @@ class SocketProvider extends ServiceProvider
     {
         $server = $this->app->make(Server::class);
 
-        if (property_exists($this, 'protocols') && is_array($this->protocols)) {
+        if (property_exists($this, 'protocols') && is_array($this->protocols) && !empty($this->protocols)) {
             foreach ($this->protocols as $name => $protocol) {
                 $server->registerProtocol($name, $this->app->make($protocol));
             }
