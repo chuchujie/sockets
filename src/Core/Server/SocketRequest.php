@@ -3,6 +3,7 @@
 
 namespace Experus\Sockets\Core\Server;
 
+use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Core\Client\SocketClient;
 
 class SocketRequest
@@ -21,10 +22,24 @@ class SocketRequest
      */
     private $message;
 
-    public function __construct(SocketClient $connection, $message)
+    /**
+     * The protocol used to parse the message.
+     *
+     * @var Protocol
+     */
+    private $protocol;
+
+    /**
+     * SocketRequest constructor.
+     * @param SocketClient $connection
+     * @param $message
+     * @param Protocol $protocol
+     */
+    public function __construct(SocketClient $connection, $message, Protocol $protocol)
     {
         $this->connection = $connection;
         $this->message = $message;
+        $this->protocol = $protocol;
     }
 
     /**

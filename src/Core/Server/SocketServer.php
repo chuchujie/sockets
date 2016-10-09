@@ -98,11 +98,8 @@ class SocketServer implements Server
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $client = $this->find($from);
-
         $protocol = $this->protocol($client);
-
-        $request = new SocketRequest($client, $msg);
-        dd($protocol);
+        $request = new SocketRequest($client, $msg, $protocol);
     }
 
     /**
