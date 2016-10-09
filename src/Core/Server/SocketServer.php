@@ -85,7 +85,7 @@ class SocketServer implements MessageComponentInterface
         $payload = json_decode($msg, true);
 
         if (json_last_error() == JSON_ERROR_NONE) {
-            // valid JSON, handle request here.
+            $request = new SocketRequest($this->find($from), $msg);
         }
     }
 
