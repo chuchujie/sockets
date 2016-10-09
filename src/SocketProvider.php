@@ -67,7 +67,7 @@ class SocketProvider extends ServiceProvider
      */
     public function provides()
     {
-        return $this->bindings;
+        return array_keys($this->bindings);
     }
 
     /**
