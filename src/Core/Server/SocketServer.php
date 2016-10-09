@@ -3,8 +3,6 @@
 
 namespace Experus\Sockets\Core\Server;
 
-use Experus\Sockets\Contracts\Middlewares\Middleware;
-use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Events\SocketConnectedEvent;
@@ -101,8 +99,41 @@ class SocketServer implements Server
     {
         $client = $this->find($from);
 
+        $protocol = $this->protocol($client);
+
         $request = new SocketRequest($client, $msg);
-        dd($request->protocol());
+        dd($protocol);
+    }
+
+    /**
+     * If any component in a stack supports a WebSocket sub-protocol return each supported in an array
+     * @return array
+     * @todo This method may be removed in future version (note that will not break code, just make some code obsolete)
+     */
+    public function getSubProtocols()
+    {
+        return array_keys($this->protocols);
+    }
+
+    /**
+     * Register a global middleware in the server.
+     *
+     * @param string $middleware
+     */
+    public function registerMiddleware($middleware)
+    {
+        $this->middlewares[] = $this->app->make($middleware);
+    }
+
+    /**
+     * Register a new protocol.
+     *
+     * @param string $name The name of the protocol.
+     * @param string $protocol The protocol to register.
+     */
+    public function registerProtocol($name, $protocol)
+    {
+        $this->protocols[$name] = $protocol;
     }
 
     /**
@@ -118,34 +149,12 @@ class SocketServer implements Server
         });
     }
 
-    /**
-     * If any component in a stack supports a WebSocket sub-protocol return each supported in an array
-     * @return array
-     * @todo This method may be removed in future version (note that will not break code, just make some code obsolete)
-     */
-    function getSubProtocols()
+    private function protocol(SocketClient $client)
     {
-        return array_keys($this->protocols);
-    }
+        $protocol = array_first($this->protocols, function($class, $protocol) use ($client) {
+            return $protocol == $client->protocol();
+        });
 
-    /**
-     * Register a global middleware in the server.
-     *
-     * @param Middleware $middleware
-     */
-    public function registerMiddleware(Middleware $middleware)
-    {
-        $this->middlewares[] = $middleware;
-    }
-
-    /**
-     * Register a new protocol.
-     *
-     * @param string $name The name of the protocol.
-     * @param Protocol $protocol The protocol to register.
-     */
-    public function registerProtocol($name, Protocol $protocol)
-    {
-        $this->protocols[$name] = $protocol;
+        return $this->app->make($protocol);
     }
 }

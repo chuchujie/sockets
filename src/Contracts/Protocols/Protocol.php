@@ -3,9 +3,10 @@
 
 namespace Experus\Sockets\Contracts\Protocols;
 
+use Experus\Sockets\Core\Server\SocketRequest;
+
 /**
  * Interface Protocol is a contract describing how a message should be interpreted by the application.
- * Implementations are passed the request instance in their constructor.
  *
  * @package Experus\Sockets\Contracts\Protocols
  */
@@ -16,5 +17,5 @@ interface Protocol
      *
      * @return string
      */
-    public function route();
+    public function route(SocketRequest $request);
 }

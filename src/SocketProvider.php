@@ -80,7 +80,7 @@ class SocketProvider extends ServiceProvider
         if (property_exists($this, 'middlewares') && is_array($this->middlewares)) {
             $server = $this->app->make(Server::class);
             foreach ($this->middlewares as $middleware) {
-                $server->registerMiddleware($this->app->make($middleware));
+                $server->registerMiddleware($middleware);
             }
         }
     }
@@ -91,10 +91,10 @@ class SocketProvider extends ServiceProvider
 
         if (property_exists($this, 'protocols') && is_array($this->protocols) && !empty($this->protocols)) {
             foreach ($this->protocols as $name => $protocol) {
-                $server->registerProtocol($name, $this->app->make($protocol));
+                $server->registerProtocol($name, $protocol);
             }
         } else {
-            $server->registerProtocol(SocketClient::DEFAULT_PROTOCOL, $this->app->make(ExperusProtocol::class));
+            $server->registerProtocol(SocketClient::DEFAULT_PROTOCOL, ExperusProtocol::class);
         }
     }
 }
