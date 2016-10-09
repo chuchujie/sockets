@@ -4,6 +4,8 @@
 namespace Experus\Sockets\Core\Client;
 
 use Ratchet\ConnectionInterface as Socket;
+use Ratchet\WebSocket\Version\RFC6455\Connection;
+use RuntimeException;
 
 /**
  * Class SocketClient represents an open connection to a client.
@@ -11,10 +13,13 @@ use Ratchet\ConnectionInterface as Socket;
  */
 class SocketClient
 {
+    const PROTOCOL_HEADER = 'Sec-WebSocket-Protocol';
+    const DEFAULT_PROTOCOL = 'experus';
+
     /**
      * The Ratchet socket.
      *
-     * @var Socket
+     * @var Connection
      */
     private $socket;
 
@@ -31,6 +36,10 @@ class SocketClient
      */
     public function __construct(Socket $socket)
     {
+        if (!($socket instanceof Connection)) {
+            throw new RuntimeException('Invalid protocol passed to internal client.'); // <- is our server wrapped in a WsServer?
+        }
+
         $this->socket = $socket;
         $this->uuid = uniqid('socket-', true);
     }
@@ -74,5 +83,21 @@ class SocketClient
     public function equals(Socket $socket)
     {
         return ($this->socket == $socket);
+    }
+
+    /**
+     * Get the protocol used for this socket.
+     *
+     * @return string
+     */
+    public function protocol()
+    {
+        $request = &$this->socket->WebSocket->request; // raw HTTP request used.
+
+        if ($request->hasHeader(self::PROTOCOL_HEADER)) {
+            return (string)$request->getHeader(self::PROTOCOL_HEADER);
+        }
+
+        return self::DEFAULT_PROTOCOL;
     }
 }

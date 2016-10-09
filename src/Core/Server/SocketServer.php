@@ -9,12 +9,13 @@ use Experus\Sockets\Events\SocketDisconnectedEvent;
 use Illuminate\Contracts\Foundation\Application;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
+use Ratchet\WebSocket\WsServerInterface;
 
 /**
  * Class SocketServer is an implementation of the Ratchet MessageComponentInterface and provides the connection layer between Laravel and Ratchet.
  * @package Experus\Sockets\Core\Server
  */
-class SocketServer implements MessageComponentInterface
+class SocketServer implements MessageComponentInterface, WsServerInterface
 {
     /**
      * @var Application
@@ -72,6 +73,7 @@ class SocketServer implements MessageComponentInterface
      */
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
+        dd([$e->getMessage(), $e->getFile(), $e->getLine()]); // TODO proper error handling
     }
 
     /**
@@ -86,6 +88,7 @@ class SocketServer implements MessageComponentInterface
 
         if (json_last_error() == JSON_ERROR_NONE) {
             $request = new SocketRequest($this->find($from), $msg);
+            dd($request->protocol());
         }
     }
 
@@ -100,5 +103,15 @@ class SocketServer implements MessageComponentInterface
         return array_first($this->clients, function(SocketClient $client) use ($connection) {
             return $client->equals($connection);
         });
+    }
+
+    /**
+     * If any component in a stack supports a WebSocket sub-protocol return each supported in an array
+     * @return array
+     * @todo This method may be removed in future version (note that will not break code, just make some code obsolete)
+     */
+    function getSubProtocols()
+    {
+        return [];
     }
 }
