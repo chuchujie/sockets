@@ -6,6 +6,7 @@ namespace Experus\Sockets\Core\Server;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
+use Experus\Sockets\Core\Middlewares\MiddlewareDispatcher;
 use Experus\Sockets\Events\SocketConnectedEvent;
 use Experus\Sockets\Events\SocketDisconnectedEvent;
 use Illuminate\Contracts\Foundation\Application;
@@ -17,6 +18,8 @@ use Ratchet\ConnectionInterface;
  */
 class SocketServer implements Server
 {
+    use MiddlewareDispatcher;
+
     /**
      * @var Application
      */
@@ -87,10 +90,11 @@ class SocketServer implements Server
      */
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
+        // TODO proper error handling
         dd([
             'message' => $e->getMessage(),
             'file' => $e->getFile(),
-            'line' => $e->getLine()]); // TODO proper error handling
+            'line' => $e->getLine()]);
     }
 
     /**
@@ -104,14 +108,20 @@ class SocketServer implements Server
         $client = $this->find($from);
         $protocol = $this->protocol($client);
         $request = new SocketRequest($client, $msg, $protocol);
+        $response = null;
 
-        $this->app->make(Router::class)->dispatch($request);
+        if (!empty($this->middlewares)) {
+            $response = $this->runThrough($this->middlewares, $request);
+        }
+
+        $response = is_null($response) ? $this->app->make(Router::class)->dispatch($request) : $response;
+
+        $client->write($response);
     }
 
     /**
      * If any component in a stack supports a WebSocket sub-protocol return each supported in an array
      * @return array
-     * @todo This method may be removed in future version (note that will not break code, just make some code obsolete)
      */
     public function getSubProtocols()
     {
@@ -154,7 +164,7 @@ class SocketServer implements Server
 
     private function protocol(SocketClient $client)
     {
-        $protocol = array_first($this->protocols, function($class, $protocol) use ($client) {
+        $protocol = array_first($this->protocols, function($_, $protocol) use ($client) {
             return $protocol == $client->protocol();
         });
 

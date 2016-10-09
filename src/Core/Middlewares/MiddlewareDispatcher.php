@@ -9,7 +9,7 @@ use Experus\Sockets\Core\Server\SocketRequest;
  * Class Dispatcher provides logic for running a request through a middleware stack.
  * @package Experus\Sockets\Core\Middlewares
  */
-trait Dispatcher
+trait MiddlewareDispatcher
 {
     /**
      * Run the request through the provided middlewares.
@@ -20,6 +20,6 @@ trait Dispatcher
      */
     public function runThrough(array $middlewares, SocketRequest $request)
     {
-        // TODO
+        // TODO implement middleware pipeline
     }
 }

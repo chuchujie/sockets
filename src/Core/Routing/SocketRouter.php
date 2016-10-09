@@ -91,7 +91,8 @@ class SocketRouter implements Router
      * Dispatch a route to the according handlers.
      *
      * @param SocketRequest $request
-     * @return null The response.
+     * @return array|null|object The response.
+     * @throws \Exception When no matching route is found.
      */
     public function dispatch(SocketRequest $request)
     {
@@ -100,9 +101,9 @@ class SocketRouter implements Router
         });
 
         if (!is_null($route)) {
-            // TODO dispatch route!
+            return $route->run($request);
         }
 
-        throw new \Exception('this should be a socket not found exception');
+        throw new \Exception('this should be a socket not found exception'); // TODO change to specialized exception
     }
 }

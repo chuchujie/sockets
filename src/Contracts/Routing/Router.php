@@ -43,7 +43,7 @@ interface Router
      * Dispatch a route to the according handlers.
      *
      * @param SocketRequest $request
-     * @return null The response.
+     * @return array|null|object The response.
      */
     public function dispatch(SocketRequest $request);
 }
