@@ -95,7 +95,12 @@ Currently sockets will broadcast 2 events for you:
 
 You can register listeners for these events as if they were [regular laravel events](https://laravel.com/docs/events). *it just works*
 
+### Exceptions
+
+TODO
+
 ### Roadmap
 
 - write unit tests
 - provide in depth documentation for each subject
+- implement exception handling stack similiar to experus\exceptions
