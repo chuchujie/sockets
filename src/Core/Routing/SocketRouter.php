@@ -97,7 +97,7 @@ class SocketRouter implements Router
      */
     public function dispatch(SocketRequest $request)
     {
-        dd($request->path());
+        dd($request);
 
         return null;
     }

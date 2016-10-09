@@ -8,7 +8,9 @@ use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
 use Illuminate\Contracts\Foundation\Application;
 use Ratchet\Http\HttpServer;
+use Ratchet\Http\OriginCheck;
 use Ratchet\Server\IoServer;
+use Ratchet\Server\IpBlackList;
 use Ratchet\WebSocket\WsServer;
 use Symfony\Component\Console\Input\InputInterface as Input;
 use Symfony\Component\Console\Output\OutputInterface as Output;
@@ -73,6 +75,20 @@ class SocketKernel implements Kernel
     private $router;
 
     /**
+     * The blacklist component of the server.
+     *
+     * @var \Ratchet\Server\IpBlackList
+     */
+    private $blacklist;
+
+    /**
+     * The origin check component of the server.
+     *
+     * @var \Ratchet\Http\OriginCheck
+     */
+    private $whitelist;
+
+    /**
      * SocketKernel constructor.
      * @param Application $app
      */
@@ -96,6 +112,8 @@ class SocketKernel implements Kernel
         $this->output = $output;
         $this->server = $this->app->make(Server::class);
         $this->router = $this->app->make(Router::class);
+        $this->whitelist = new HttpServer(new OriginCheck(new WsServer($this->server), ['localhost']));
+        $this->blacklist = new IpBlackList($this->whitelist);
 
         $this->initRouter();
 
@@ -108,7 +126,28 @@ class SocketKernel implements Kernel
     public function listen()
     {
         $this->output->writeln('Listening for incoming connections on ' . $this->getHost() . ':' . $this->getPort());
-        IoServer::factory(new HttpServer(new WsServer($this->server)), $this->getPort(), $this->getHost())->run();
+
+        IoServer::factory($this->whitelist, $this->getPort(), $this->getHost())->run();
+    }
+
+    /**
+     * Blacklist an address from the server.
+     *
+     * @param string $address
+     */
+    public function block($address)
+    {
+        $this->blacklist->blockAddress($address);
+    }
+
+    /**
+     * Whitelist a host to connect to the server.
+     *
+     * @param string $address
+     */
+    public function allow($address)
+    {
+        $this->whitelist->allowedOrigins[] = $address;
     }
 
     /**

@@ -26,4 +26,18 @@ interface Kernel
      * Start the socket server and accept incoming connections.
      */
     public function listen();
+
+    /**
+     * Blacklist an address from the server.
+     *
+     * @param string $address
+     */
+    public function block($address);
+
+    /**
+     * Whitelist a host to connect to the server.
+     *
+     * @param string $address
+     */
+    public function allow($address);
 }

@@ -99,6 +99,8 @@ You can register listeners for these events as if they were [regular laravel eve
 
 TODO
 
+### Whitelisting and blacklisting
+
 ### Roadmap
 
 - write unit tests
