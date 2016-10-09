@@ -3,6 +3,8 @@
 
 namespace Experus\Sockets\Core\Server;
 
+use Experus\Sockets\Contracts\Middlewares\Middleware;
+use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Events\SocketConnectedEvent;
@@ -27,6 +29,20 @@ class SocketServer implements Server
      * @var array
      */
     private $clients = [];
+
+    /**
+     * Global middleware stack.
+     *
+     * @var array
+     */
+    private $middlewares = [];
+
+    /**
+     * The registered protocols available.
+     *
+     * @var array
+     */
+    private $protocols = [];
 
     /**
      * SocketServer constructor.
@@ -111,6 +127,27 @@ class SocketServer implements Server
      */
     function getSubProtocols()
     {
-        return [];
+        return array_keys($this->protocols);
+    }
+
+    /**
+     * Register a global middleware in the server.
+     *
+     * @param Middleware $middleware
+     */
+    public function registerMiddleware(Middleware $middleware)
+    {
+        $this->middlewares[] = $middleware;
+    }
+
+    /**
+     * Register a new protocol.
+     *
+     * @param string $name The name of the protocol.
+     * @param Protocol $protocol The protocol to register.
+     */
+    public function registerProtocol($name, Protocol $protocol)
+    {
+        $this->protocols[$name] = $protocol;
     }
 }
