@@ -99,12 +99,10 @@ class SocketServer implements Server
      */
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        $payload = json_decode($msg, true);
+        $client = $this->find($from);
 
-        if (json_last_error() == JSON_ERROR_NONE) {
-            $request = new SocketRequest($this->find($from), $msg);
-            dd($request->protocol());
-        }
+        $request = new SocketRequest($client, $msg);
+        dd($request->protocol());
     }
 
     /**
