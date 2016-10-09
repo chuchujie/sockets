@@ -5,6 +5,7 @@ namespace Experus\Sockets\Core;
 
 use Experus\Sockets\Contracts\Kernel;
 use Experus\Sockets\Contracts\Routing\Router;
+use Experus\Sockets\Contracts\Server\Server;
 use Illuminate\Contracts\Foundation\Application;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
@@ -93,7 +94,7 @@ class SocketKernel implements Kernel
     {
         $this->input = $input;
         $this->output = $output;
-        $this->server = $this->app->make(\Ratchet\MessageComponentInterface::class);
+        $this->server = $this->app->make(Server::class);
         $this->router = $this->app->make(Router::class);
 
         $this->initRouter();
