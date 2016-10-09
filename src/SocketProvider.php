@@ -16,13 +16,32 @@ use Ratchet\MessageComponentInterface;
  */
 class SocketProvider extends ServiceProvider
 {
+
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    public $defer = true;
+
+    /**
+     * The bindings this service provider provides.
+     *
+     * @var array
+     */
+    private $bindings = [
+        MessageComponentInterface::class => SocketServer::class,
+        Router::class => SocketRouter::class,
+    ];
+
     /**
      * Register the services.
      */
     public function register()
     {
-        $this->app->singleton(MessageComponentInterface::class, SocketServer::class);
-        $this->app->singleton(Router::class, SocketRouter::class);
+        foreach ($this->bindings as $contract => $binding) {
+            $this->app->singleton($contract, $binding);
+        }
 
         $this->commands([ ServeCommand::class ]);
 
@@ -39,6 +58,16 @@ class SocketProvider extends ServiceProvider
             __DIR__ . '/../files/socket' => base_path('socket'),
             __DIR__ . '/../files/routes.php' => base_path('routes/socket.php'),
         ], 'socket');
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return $this->bindings;
     }
 
     /**
