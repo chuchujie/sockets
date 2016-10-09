@@ -6,6 +6,8 @@ namespace Experus\Sockets;
 use Experus\Sockets\Commands\ServeCommand;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
+use Experus\Sockets\Core\Client\SocketClient;
+use Experus\Sockets\Core\Protocols\ExperusProtocol;
 use Experus\Sockets\Core\Routing\SocketRouter;
 use Experus\Sockets\Core\Server\SocketServer;
 use Illuminate\Support\ServiceProvider;
@@ -85,11 +87,14 @@ class SocketProvider extends ServiceProvider
 
     private function registerProtocols()
     {
+        $server = $this->app->make(Server::class);
+
         if (property_exists($this, 'protocols') && is_array($this->protocols)) {
-            $server = $this->app->make(Server::class);
             foreach ($this->protocols as $name => $protocol) {
                 $server->registerProtocol($name, $this->app->make($protocol));
             }
+        } else {
+            $server->registerProtocol(SocketClient::DEFAULT_PROTOCOL, $this->app->make(ExperusProtocol::class));
         }
     }
 }
