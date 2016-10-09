@@ -1,0 +1,22 @@
+<?php
+// Created by dealloc. All rights reserved.
+
+namespace Experus\Sockets\Contracts\Middlewares;
+
+use Closure;
+
+/**
+ * Interface Middleware provides a contract for generic middleware handling.
+ * @package Experus\Sockets\Contracts\Middlewares
+ */
+interface Middleware
+{
+    /**
+     * Pass the request through the middleware.
+     *
+     * @param mixed $request The request to handle.
+     * @param Closure $next The next middleware.
+     * @return array|null|object A premature response or nothing.
+     */
+    public function handle($request, Closure $next);
+}
