@@ -3,19 +3,18 @@
 
 namespace Experus\Sockets\Core\Server;
 
+use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Events\SocketConnectedEvent;
 use Experus\Sockets\Events\SocketDisconnectedEvent;
 use Illuminate\Contracts\Foundation\Application;
 use Ratchet\ConnectionInterface;
-use Ratchet\MessageComponentInterface;
-use Ratchet\WebSocket\WsServerInterface;
 
 /**
  * Class SocketServer is an implementation of the Ratchet MessageComponentInterface and provides the connection layer between Laravel and Ratchet.
  * @package Experus\Sockets\Core\Server
  */
-class SocketServer implements MessageComponentInterface, WsServerInterface
+class SocketServer implements Server
 {
     /**
      * @var Application
