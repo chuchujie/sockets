@@ -15,29 +15,25 @@ use Experus\Sockets\Core\Server\SocketRequest;
 class SocketRouter implements Router
 {
     /**
-     * Internal name for the global (unnamed) channel.
-     */
-    const GLOBAL_CHANNEL = '__global__';
-
-    /**
-     * All channels currently registered in the application.
+     * All registered routes.
      *
      * @var array
      */
-    private $channels = [];
+    private $routes = [];
 
     /**
-     * Reference to the current channel we're working in.
+     * The currently active channel
+     *
+     * @var string
+     */
+    private $channel = '';
+
+    /**
+     * The currently active properties.
      *
      * @var array
      */
-    private $current;
-
-    public function __construct()
-    {
-        $this->channels[self::GLOBAL_CHANNEL] = [];
-        $this->current = &$this->channels[self::GLOBAL_CHANNEL];
-    }
+    private $properties = [];
 
     /**
      * Register the uri in the router.
@@ -48,7 +44,9 @@ class SocketRouter implements Router
      */
     public function socket($uri, $action)
     {
-        $this->current[$uri] = $action;
+        $action = (is_array($action) ? $action : $action = ['uses' => $action]);
+
+        $this->routes[] = new SocketRoute($uri, $action, $this->channel, $this->properties);
 
         return $this;
     }
@@ -62,6 +60,12 @@ class SocketRouter implements Router
      */
     public function group(array $attributes, Closure $callback)
     {
+        $this->properties = $attributes;
+
+        $callback($this);
+
+        $this->properties = [];
+
         return $this;
     }
 
@@ -74,17 +78,11 @@ class SocketRouter implements Router
      */
     public function channel($attributes, Closure $callback)
     {
-        $name = (is_array($attributes) ? $attributes['name'] : $attributes);
-
-        if (!array_key_exists($name, $this->channels)) {
-            $this->channels[$name] = [];
-        }
-
-        $this->current = &$this->channels[$name];
+        $this->channel = (is_array($attributes) ? $attributes['name'] : $attributes);
 
         $callback($this);
 
-        $this->current = &$this->channels[self::GLOBAL_CHANNEL];
+        $this->channel = '';
 
         return $this;
     }
@@ -97,8 +95,14 @@ class SocketRouter implements Router
      */
     public function dispatch(SocketRequest $request)
     {
-        dd($request);
+        $route = array_first($this->routes, function (SocketRoute $route) use ($request) {
+            return $route->match($request);
+        });
 
-        return null;
+        if (!is_null($route)) {
+            // TODO dispatch route!
+        }
+
+        throw new \Exception('this should be a socket not found exception');
     }
 }
