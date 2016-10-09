@@ -58,7 +58,7 @@ class SocketServer implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
-        $client = array_first($this->clients, function(SocketClient $client) use ($conn) { return $client->equals($conn); });
+        $client = $this->find($conn);
 
         $this->app->make('events')->fire(new SocketDisconnectedEvent($client));
     }
@@ -82,5 +82,18 @@ class SocketServer implements MessageComponentInterface
      */
     public function onMessage(ConnectionInterface $from, $msg)
     {
+    }
+
+    /**
+     * Find the client instance for a connection.
+     *
+     * @param ConnectionInterface $connection
+     * @return SocketClient
+     */
+    private function find(ConnectionInterface $connection)
+    {
+        return array_first($this->clients, function(SocketClient $client) use ($connection) {
+            return $client->equals($connection);
+        });
     }
 }
