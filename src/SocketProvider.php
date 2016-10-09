@@ -76,8 +76,9 @@ class SocketProvider extends ServiceProvider
     private function registerMiddleware()
     {
         if (property_exists($this, 'middlewares') && is_array($this->middlewares)) {
+            $server = $this->app->make(Server::class);
             foreach ($this->middlewares as $middleware) {
-                // register middlewares
+                $server->registerMiddleware($middleware);
             }
         }
     }
@@ -85,8 +86,9 @@ class SocketProvider extends ServiceProvider
     private function registerProtocols()
     {
         if (property_exists($this, 'protocols') && is_array($this->protocols)) {
-            foreach ($this->protocols as $protocol) {
-                // register protocols
+            $server = $this->app->make(Server::class);
+            foreach ($this->protocols as $name => $protocol) {
+                $server->registerProtocol($name, $protocol);
             }
         }
     }
