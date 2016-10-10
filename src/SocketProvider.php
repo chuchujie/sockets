@@ -6,9 +6,11 @@ namespace Experus\Sockets;
 use Experus\Sockets\Commands\GenerateControllerCommand;
 use Experus\Sockets\Commands\GenerateMiddlewareCommand;
 use Experus\Sockets\Commands\ServeCommand;
+use Experus\Sockets\Contracts\Exceptions\Handler;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
+use Experus\Sockets\Core\Exceptions\StubHandler;
 use Experus\Sockets\Core\Protocols\ExperusProtocol;
 use Experus\Sockets\Core\Routing\SocketRouter;
 use Experus\Sockets\Core\Server\SocketServer;
@@ -45,6 +47,13 @@ class SocketProvider extends ServiceProvider
     ];
 
     /**
+     * The exception handler for handling exceptions occurring when processing Websockets.
+     *
+     * @var Handler
+     */
+    public $handler = StubHandler::class;
+
+    /**
      * The bindings this service provider provides.
      *
      * @var array
@@ -71,6 +80,7 @@ class SocketProvider extends ServiceProvider
 
         $this->registerMiddleware();
         $this->registerProtocols();
+        $this->app->singleton(Handler::class, $this->handler);
     }
 
     /**

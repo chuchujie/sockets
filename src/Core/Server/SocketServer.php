@@ -3,6 +3,7 @@
 
 namespace Experus\Sockets\Core\Server;
 
+use Experus\Sockets\Contracts\Exceptions\Handler;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
@@ -79,23 +80,38 @@ class SocketServer implements Server
         $client = $this->find($conn);
 
         $this->app->make('events')->fire(new SocketDisconnectedEvent($client));
+
+        $index = array_search($client, $this->clients);
+        unset($this->clients[$index]);
     }
 
     /**
      * If there is an error with one of the sockets, or somewhere in the application where an Exception is thrown,
      * the Exception is sent back down the stack, handled by the Server and bubbled back up the application through this method
-     * @param  ConnectionInterface $conn
-     * @param  \Exception $e
+     * @param  ConnectionInterface $connection
+     * @param  \Exception $exception
      * @throws \Exception
      */
-    public function onError(ConnectionInterface $conn, \Exception $e)
+    public function onError(ConnectionInterface $connection, \Exception $exception)
     {
-        // TODO proper error handling
-        dd([
-            'message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine()
-        ]);
+        $client = $this->find($connection);
+        $handler = $this->app->make(Handler::class);
+        $response = $handler->handle($client, $exception);
+
+        if (is_null($response)) {
+            $client->write([
+                'type' => get_class($exception),
+                'message' => $exception->getMessage(),
+                'location' => [
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                ],
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            $client->close();
+        } else {
+            $client->write($response);
+        }
     }
 
     /**
