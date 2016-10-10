@@ -71,7 +71,7 @@ class SocketRoute
     public function run(SocketRequest $request)
     {
         if (!empty($this->middlewares())) {
-            $response = $this->runThrough($this->middlewares(), $request); // TODO handle response from middleware stack?
+            $response = $this->runThrough($this->middlewares(), $request);
 
             if (!is_null($response)) {
                 return $response;
@@ -183,10 +183,12 @@ class SocketRoute
                 } else {
                     $parameters[] = $this->app->make((string)$parameter->getType());
                 }
-            } else if ($parameter->isDefaultValueAvailable()) {
-                $parameters[] = $parameter->getDefaultValue();
             } else {
-                throw new \ReflectionException('Cannot resolve ' . $parameter->getName() . ' for ' . $method->getName());
+                if ($parameter->isDefaultValueAvailable()) {
+                    $parameters[] = $parameter->getDefaultValue();
+                } else {
+                    throw new \ReflectionException('Cannot resolve ' . $parameter->getName() . ' for ' . $method->getName());
+                }
             }
         }
 

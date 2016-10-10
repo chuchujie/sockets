@@ -34,7 +34,7 @@ class ServeCommand extends Command
     /**
      * Create a new command instance.
      *
-     * @return void
+     * @param Application $app
      */
     public function __construct(Application $app)
     {

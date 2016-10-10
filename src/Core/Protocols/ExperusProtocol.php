@@ -11,6 +11,7 @@ class ExperusProtocol implements Protocol
     /**
      * Extract the intended route from the request.
      *
+     * @param SocketRequest $request
      * @return string
      */
     public function route(SocketRequest $request)

@@ -94,7 +94,8 @@ class SocketServer implements Server
         dd([
             'message' => $e->getMessage(),
             'file' => $e->getFile(),
-            'line' => $e->getLine()]);
+            'line' => $e->getLine()
+        ]);
     }
 
     /**
@@ -157,14 +158,14 @@ class SocketServer implements Server
      */
     private function find(ConnectionInterface $connection)
     {
-        return array_first($this->clients, function(SocketClient $client) use ($connection) {
+        return array_first($this->clients, function (SocketClient $client) use ($connection) {
             return $client->equals($connection);
         });
     }
 
     private function protocol(SocketClient $client)
     {
-        $protocol = array_first($this->protocols, function($_, $protocol) use ($client) {
+        $protocol = array_first($this->protocols, function ($_, $protocol) use ($client) {
             return $protocol == $client->protocol();
         });
 

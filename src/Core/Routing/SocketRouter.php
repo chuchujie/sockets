@@ -6,6 +6,7 @@ namespace Experus\Sockets\Core\Routing;
 use Closure;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Core\Server\SocketRequest;
+use Experus\Sockets\Exceptions\NotFoundException;
 use Illuminate\Contracts\Foundation\Application;
 
 /**
@@ -119,6 +120,6 @@ class SocketRouter implements Router
             return $route->run($request);
         }
 
-        throw new \Exception('this should be a socket not found exception'); // TODO change to specialized exception
+        throw new NotFoundException($request->path());
     }
 }
