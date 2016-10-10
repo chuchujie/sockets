@@ -4,6 +4,7 @@
 namespace Experus\Sockets\Contracts\Middlewares;
 
 use Closure;
+use Experus\Sockets\Core\Server\SocketRequest;
 
 /**
  * Interface Middleware provides a contract for generic middleware handling.
@@ -18,5 +19,5 @@ interface Middleware
      * @param Closure $next The next middleware.
      * @return array|null|object A premature response or nothing.
      */
-    public function handle($request, Closure $next);
+    public function handle(SocketRequest $request, Closure $next);
 }
