@@ -5,6 +5,7 @@ namespace Experus\Sockets\Core\Routing;
 
 use Experus\Sockets\Core\Middlewares\MiddlewareDispatcher;
 use Experus\Sockets\Core\Server\SocketRequest;
+use RuntimeException;
 
 class SocketRoute
 {
@@ -18,14 +19,22 @@ class SocketRoute
     private $attributes;
 
     /**
+     * The URI for which the route is responsible.
+     *
+     * @var string
+     */
+    private $path;
+
+    /**
      * SocketRoute constructor.
-     * @param $path
-     * @param $action
+     * @param string $path
+     * @param array $action
      * @param string $channel
      * @param array $attributes
      */
-    public function __construct($path, $action, $channel = '', $attributes = [])
+    public function __construct($path, array $action, $channel = '', $attributes = [])
     {
+        $this->path = $path;
         $this->attributes = array_merge($attributes, $action, compact('channel'));
     }
 
@@ -56,7 +65,31 @@ class SocketRoute
             }
         }
 
-        // run request callables.
+        if ($this->isControllerAction()) {
+            return $this->dispatchController($request);
+        }
+
+        return $this->dispatchCallable($request);
+    }
+
+    /**
+     * Get the name of the route if an alias is set, otherwise this function returns the route's path.
+     *
+     * @return string
+     */
+    public function name()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Check if this route is a controller action.
+     *
+     * @return bool
+     */
+    private function isControllerAction()
+    {
+        return is_string($this->attributes['uses']);
     }
 
     /**
@@ -66,6 +99,41 @@ class SocketRoute
      */
     private function middlewares()
     {
-        return []; // TODO extract middlewares for this route
+        if (isset($this->attributes['middlewares'])) {
+            if (is_string($this->attributes['middlewares'])) {
+                return [$this->attributes['middlewares']];
+            }
+
+            return $this->attributes['middlewares'];
+        }
+
+        return [];
+    }
+
+    /**
+     * Dispatch the route to a controller method passed to this route.
+     *
+     * @param SocketRequest $request
+     * @return array|null|object
+     */
+    private function dispatchController(SocketRequest $request)
+    {
+        // TODO some fancy container magic to resolve the dependencies and dispatch the controller
+    }
+
+    /**
+     * Dispatch the route to the callable passed to this route.
+     *
+     * @param SocketRequest $request
+     * @return array|null|object
+     * @throws RuntimeException when a non-callable is passed as an action.
+     */
+    private function dispatchCallable(SocketRequest $request)
+    {
+        if (!is_callable($this->attributes['uses'])) {
+            throw new RuntimeException('Invalid action passed to route ' . $this->name());
+        }
+
+        return $this->attributes['uses']($request); // TODO resolve callable parameters from the container.
     }
 }
