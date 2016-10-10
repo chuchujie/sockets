@@ -5,6 +5,7 @@ namespace Experus\Sockets\Core\Routing;
 
 use Experus\Sockets\Core\Middlewares\MiddlewareDispatcher;
 use Experus\Sockets\Core\Server\SocketRequest;
+use Experus\Sockets\Exceptions\InvalidActionException;
 use Illuminate\Contracts\Foundation\Application;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
@@ -132,7 +133,7 @@ class SocketRoute
     private function dispatchController(SocketRequest $request)
     {
         if (!str_contains($this->attributes['uses'], '@')) {
-            throw new RuntimeException('Invalid action passed to route ' . $this->name());
+            throw new InvalidActionException($this->name());
         }
 
         list($controller, $action) = explode('@', $this->attributes['uses']);
@@ -154,7 +155,7 @@ class SocketRoute
     private function dispatchCallable(SocketRequest $request)
     {
         if (!is_callable($this->attributes['uses'])) {
-            throw new RuntimeException('Invalid action passed to route ' . $this->name());
+            throw new InvalidActionException($this->name());
         }
 
         $method = new ReflectionFunction($this->attributes['uses']);

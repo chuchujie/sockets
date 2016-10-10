@@ -5,7 +5,7 @@ namespace Experus\Sockets\Core\Client;
 
 use Ratchet\ConnectionInterface as Socket;
 use Ratchet\WebSocket\Version\RFC6455\Connection;
-use RuntimeException;
+use UnexpectedValueException;
 
 /**
  * Class SocketClient represents an open connection to a client.
@@ -37,7 +37,7 @@ class SocketClient
     public function __construct(Socket $socket)
     {
         if (!($socket instanceof Connection)) {
-            throw new RuntimeException('Invalid protocol passed to internal client.'); // <- is our server wrapped in a WsServer?
+            throw new UnexpectedValueException('Invalid protocol passed to internal client'); // <- is our server wrapped in a WsServer?
         }
 
         $this->socket = $socket;
