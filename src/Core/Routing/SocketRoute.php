@@ -6,6 +6,8 @@ namespace Experus\Sockets\Core\Routing;
 use Experus\Sockets\Core\Middlewares\MiddlewareDispatcher;
 use Experus\Sockets\Core\Server\SocketRequest;
 use Illuminate\Contracts\Foundation\Application;
+use ReflectionFunction;
+use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use RuntimeException;
 
@@ -129,17 +131,17 @@ class SocketRoute
      */
     private function dispatchController(SocketRequest $request)
     {
-        $parts = explode('@', $this->attributes['uses']);
-
-        if (sizeof($parts) !== 2) {
+        if (!str_contains($this->attributes['uses'], '@')) {
             throw new RuntimeException('Invalid action passed to route ' . $this->name());
         }
 
-        $controller = $this->app->make($this->attributes['namespace'] . '\\' . $parts[0]);
-        $method = new ReflectionMethod($controller, $parts[1]);
+        list($controller, $action) = explode('@', $this->attributes['uses']);
+
+        $controller = $this->app->make($this->attributes['namespace'] . '\\' . $controller);
+        $method = new ReflectionMethod($controller, $action);
         $parameters = $this->buildParameters($method, $request);
 
-        return call_user_func_array([$controller, $method], $parameters);
+        return call_user_func_array([$controller, $action], $parameters);
     }
 
     /**
@@ -155,17 +157,22 @@ class SocketRoute
             throw new RuntimeException('Invalid action passed to route ' . $this->name());
         }
 
-        return $this->attributes['uses']($request); // TODO resolve callable parameters from the container.
+        $method = new ReflectionFunction($this->attributes['uses']);
+
+        $parameters = $this->buildParameters($method, $request);
+
+        return $method->invokeArgs($parameters);
     }
 
     /**
      * Build an array of resolved parameters to call the method with.
      *
-     * @param ReflectionMethod $method
+     * @param ReflectionFunctionAbstract $method
      * @param SocketRequest $request
      * @return array
+     * @throws \ReflectionException
      */
-    private function buildParameters(ReflectionMethod $method, SocketRequest $request)
+    private function buildParameters(ReflectionFunctionAbstract $method, SocketRequest $request)
     {
         $parameters = [];
 
