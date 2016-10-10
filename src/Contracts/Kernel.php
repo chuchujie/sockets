@@ -13,6 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface as Output;
  */
 interface Kernel
 {
+    const CONTROLLER_NAMESPACE = 'App\Sockets\Controllers';
+
     /**
      * Initialize the socket runtime.
      *

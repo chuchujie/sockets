@@ -167,7 +167,9 @@ class SocketKernel implements Kernel
     {
         $router = $this->router; // this variable is accessed in the routes file.
 
-        require $this->app->basePath() . '/routes/socket.php';
+        $router->group(['namespace' => self::CONTROLLER_NAMESPACE], function(Router $router) {
+            require $this->app->basePath() . '/routes/socket.php';
+        });
     }
 
     /**
