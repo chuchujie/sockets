@@ -134,7 +134,7 @@ class SocketRoute
             throw new RuntimeException('Invalid action passed to route ' . $this->name());
         }
 
-        $controller = $this->app->make($parts[0]);
+        $controller = $this->app->make($this->attributes['namespace'] . '\\' . $parts[0]);
         $method = $parts[1];
 
         return call_user_func([$controller, $method], $request); // TODO resolve controller method dependencies
