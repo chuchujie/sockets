@@ -46,7 +46,7 @@ class SocketRoute
      */
     public function match(SocketRequest $request)
     {
-        return false; // TODO perform some matchmaking magic to check if the route matches the request.
+        return ($this->path == $request->path());
     }
 
     /**
