@@ -13,7 +13,7 @@ class GenerateMiddlewareCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'socket:middleware {name} {--namespace=} {--dir=}';
+    protected $signature = 'socket:middleware {name : The name of the middleware class} {--namespace= : The namespace of the middleware} {--dir= : The root directory}';
 
     /**
      * The console command description.

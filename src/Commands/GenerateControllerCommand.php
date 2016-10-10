@@ -14,7 +14,7 @@ class GenerateControllerCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'socket:controller {name} {--namespace=} {--dir=}';
+    protected $signature = 'socket:controller {name : The name of the controller} {--namespace= : The namespace of the controller to generate} {--dir= : The root directory}';
 
     /**
      * The console command description.
