@@ -6,6 +6,7 @@ namespace Experus\Sockets\Core\Routing;
 use Experus\Sockets\Core\Middlewares\MiddlewareDispatcher;
 use Experus\Sockets\Core\Server\SocketRequest;
 use Illuminate\Contracts\Foundation\Application;
+use ReflectionMethod;
 use RuntimeException;
 
 class SocketRoute
@@ -135,9 +136,10 @@ class SocketRoute
         }
 
         $controller = $this->app->make($this->attributes['namespace'] . '\\' . $parts[0]);
-        $method = $parts[1];
+        $method = new ReflectionMethod($controller, $parts[1]);
+        $parameters = $this->buildParameters($method, $request);
 
-        return call_user_func([$controller, $method], $request); // TODO resolve controller method dependencies
+        return call_user_func_array([$controller, $method], $parameters);
     }
 
     /**
@@ -154,5 +156,33 @@ class SocketRoute
         }
 
         return $this->attributes['uses']($request); // TODO resolve callable parameters from the container.
+    }
+
+    /**
+     * Build an array of resolved parameters to call the method with.
+     *
+     * @param ReflectionMethod $method
+     * @param SocketRequest $request
+     * @return array
+     */
+    private function buildParameters(ReflectionMethod $method, SocketRequest $request)
+    {
+        $parameters = [];
+
+        foreach ($method->getParameters() as $parameter) {
+            if ($parameter->hasType()) {
+                if ($parameter->getType() == SocketRequest::class) {
+                    $parameters[] = $request;
+                } else {
+                    $parameters[] = $this->app->make((string)$parameter->getType());
+                }
+            } else if ($parameter->isDefaultValueAvailable()) {
+                $parameters[] = $parameter->getDefaultValue();
+            } else {
+                throw new \ReflectionException('Cannot resolve ' . $parameter->getName() . ' for ' . $method->getName());
+            }
+        }
+
+        return $parameters;
     }
 }
