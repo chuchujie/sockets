@@ -60,11 +60,13 @@ class SocketRouter implements Router
      */
     public function group(array $attributes, Closure $callback)
     {
-        $this->properties = $attributes;
+        $original = $this->properties;
+
+        $this->properties = array_merge($original, $attributes);
 
         $callback($this);
 
-        $this->properties = [];
+        $this->properties = $original;
 
         return $this;
     }
