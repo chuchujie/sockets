@@ -3,6 +3,7 @@
 
 namespace Experus\Sockets;
 
+use Experus\Sockets\Commands\GenerateControllerCommand;
 use Experus\Sockets\Commands\ServeCommand;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
@@ -45,7 +46,7 @@ class SocketProvider extends ServiceProvider
             $this->app->singleton($contract, $binding);
         }
 
-        $this->commands([ ServeCommand::class ]);
+        $this->commands([ ServeCommand::class, GenerateControllerCommand::class ]);
 
         $this->registerMiddleware();
         $this->registerProtocols();
