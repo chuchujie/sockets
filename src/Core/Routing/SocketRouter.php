@@ -6,6 +6,7 @@ namespace Experus\Sockets\Core\Routing;
 use Closure;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Core\Server\SocketRequest;
+use Illuminate\Contracts\Foundation\Application;
 
 /**
  * Class SocketRouter implements the routing contract for socket routing.
@@ -36,6 +37,18 @@ class SocketRouter implements Router
     private $properties = [];
 
     /**
+     * The laravel application.
+     *
+     * @var Application
+     */
+    private $app;
+
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
      * Register the uri in the router.
      *
      * @param string $uri
@@ -46,7 +59,7 @@ class SocketRouter implements Router
     {
         $action = (is_array($action) ? $action : $action = ['uses' => $action]);
 
-        $this->routes[] = new SocketRoute($uri, $action, $this->channel, $this->properties);
+        $this->routes[] = new SocketRoute($uri, $action, $this->channel, $this->properties, $this->app);
 
         return $this;
     }
