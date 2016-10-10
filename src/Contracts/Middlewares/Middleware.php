@@ -15,9 +15,9 @@ interface Middleware
     /**
      * Pass the request through the middleware.
      *
-     * @param mixed $request The request to handle.
+     * @param SocketRequest &$request Reference to the request to handle.
      * @param Closure $next The next middleware.
      * @return array|null|object A premature response or nothing.
      */
-    public function handle(SocketRequest $request, Closure $next);
+    public function handle(SocketRequest &$request, Closure $next);
 }

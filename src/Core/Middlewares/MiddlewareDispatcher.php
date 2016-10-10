@@ -20,6 +20,21 @@ trait MiddlewareDispatcher
      */
     public function runThrough(array $middlewares, SocketRequest $request)
     {
-        // TODO implement middleware pipeline
+        if (empty($middlewares)) {
+            return null;
+        }
+
+        $size = sizeof($middlewares);
+        $index = 0;
+
+        $next = function(&$request) use ($size, &$index, &$middlewares, &$next) {
+            if ($size == $index++) {
+                return null;
+            }
+
+            return $this->app->make($middlewares[$index])->handle($request, $next);
+        };
+
+        return $next($request);
     }
 }
