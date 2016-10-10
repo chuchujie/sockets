@@ -29,6 +29,22 @@ class SocketProvider extends ServiceProvider
     public $defer = true;
 
     /**
+     * The global middleware stack.
+     *
+     * @var array
+     */
+    public $middlewares = [];
+
+    /**
+     * The supplied protocol stack.
+     *
+     * @var array
+     */
+    public $protocols = [
+        SocketClient::DEFAULT_PROTOCOL => ExperusProtocol::class,
+    ];
+
+    /**
      * The bindings this service provider provides.
      *
      * @var array
@@ -83,7 +99,7 @@ class SocketProvider extends ServiceProvider
      */
     private function registerMiddleware()
     {
-        if (property_exists($this, 'middlewares') && is_array($this->middlewares)) {
+        if (!empty($this->middlewares)) {
             $server = $this->app->make(Server::class);
             foreach ($this->middlewares as $middleware) {
                 $server->registerMiddleware($middleware);
@@ -95,12 +111,10 @@ class SocketProvider extends ServiceProvider
     {
         $server = $this->app->make(Server::class);
 
-        if (property_exists($this, 'protocols') && is_array($this->protocols) && !empty($this->protocols)) {
+        if (!empty($this->protocols)) {
             foreach ($this->protocols as $name => $protocol) {
                 $server->registerProtocol($name, $protocol);
             }
-        } else {
-            $server->registerProtocol(SocketClient::DEFAULT_PROTOCOL, ExperusProtocol::class);
         }
     }
 }
