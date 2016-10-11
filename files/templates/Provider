@@ -1,0 +1,24 @@
+<?php
+
+namespace {{namespace}};
+
+use \Experus\Sockets\SocketProvider as ServiceProvider;
+
+class {{name}} extends ServiceProvider
+{
+    /**
+     * The middlewares to apply to incoming requests.
+     *
+     * @var array
+     */
+    protected $middlewares = [
+    ];
+
+    /**
+     * All the protocols supported by this application.
+     *
+     * @var array
+     */
+    protected $protocols = [
+    ];
+}
