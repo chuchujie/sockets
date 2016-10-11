@@ -36,14 +36,14 @@ class SocketProvider extends ServiceProvider
      *
      * @var array
      */
-    public $middlewares = [];
+    protected $middlewares = [];
 
     /**
      * The supplied protocol stack.
      *
      * @var array
      */
-    public $protocols = [
+    protected $protocols = [
         SocketClient::DEFAULT_PROTOCOL => ExperusProtocol::class,
     ];
 
@@ -52,7 +52,7 @@ class SocketProvider extends ServiceProvider
      *
      * @var Handler
      */
-    public $handler = StubHandler::class;
+    protected $handler = StubHandler::class;
 
     /**
      * The bindings this service provider provides.
