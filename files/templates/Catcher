@@ -1,0 +1,32 @@
+<?php
+
+namespace {{namespace}};
+
+use Experus\Sockets\Core\Client\SocketClient;
+
+/**
+ * Class {{name}} handles NotFoundExceptions
+ * @package {{namespace}}
+ */
+class {{name}}
+{
+    /**
+     * {{name}} constructor.
+     */
+    public function __construct()
+    {
+        // TODO type hint dependencies
+    }
+
+    /**
+     * Handle the exception thrown on the connection.
+     *
+     * @param SocketClient $client
+     * @param \Exception $exception
+     * @todo Specialize exception type hint.
+     */
+    public function handle(SocketClient $client, \Exception $exception)
+    {
+        // TODO handle exception
+    }
+}
