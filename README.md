@@ -95,7 +95,7 @@ Currently sockets will broadcast 2 events for you:
 
 You can register listeners for these events as if they were [regular laravel events](https://laravel.com/docs/events). *it just works*
 
-### Exceptions
+### Exceptions (catchers and handlers)
 
 TODO (note the existence of NoopHandler and DebugHandler)
 
