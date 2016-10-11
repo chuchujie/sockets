@@ -19,7 +19,7 @@ class {{name}} implements Middleware
      * @param Closure $next The next middleware.
      * @return array|null|object A premature response or nothing.
      */
-    public function handle(SocketRequest $request, Closure $next)
+    public function handle(SocketRequest &$request, Closure $next)
     {
         // TODO: Implement handle() method.
     }
