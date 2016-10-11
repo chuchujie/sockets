@@ -48,14 +48,17 @@ abstract class AbstractGeneratorCommand extends Command
         $directory = $this->buildDirectory($namespace);
         $output = $directory . '/' . $name . '.php';
 
-        if (!is_dir($directory)) {
-            mkdir($directory, 0755, true);
+        $this->prepareDirectory($directory);
+
+        if (!$this->checkOverwrite($name, $output)) {
+            return;
         }
 
         $template = file_get_contents(__DIR__ . '/../../files/templates/' . $this->template);
         $template = $this->compile($template, compact('name', 'namespace'));
 
         file_put_contents($output, $this->compile($template));
+        $this->output->success('Generated ' . $namespace . '\\' . $name);
     }
 
     /**
@@ -87,5 +90,34 @@ abstract class AbstractGeneratorCommand extends Command
         }
 
         return preg_replace('/{{[a-zA-Z]+}}/', '', $template);
+    }
+
+    /**
+     * Prevent accidentally overwriting files by warning the user if the file exists.
+     *
+     * @param string $name
+     * @param string $output
+     * @return bool returns true if we can continue.
+     */
+    private function checkOverwrite($name, $output)
+    {
+        if (file_exists($output)) {
+            $this->output->warning($name . ' already exists!');
+            return (bool)$this->output->confirm('Do you want to overwrite?');
+        }
+
+        return true;
+    }
+
+    /**
+     * Make sure the required directories exist or are created if they don't.
+     *
+     * @param string $directory
+     */
+    private function prepareDirectory($directory)
+    {
+        if (!is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
     }
 }
