@@ -12,6 +12,7 @@ class {{name}} extends ServiceProvider
      * @var array
      */
     protected $middlewares = [
+        // register your global middlewares here
     ];
 
     /**
@@ -20,5 +21,13 @@ class {{name}} extends ServiceProvider
      * @var array
      */
     protected $protocols = [
+        // register your protocols here
     ];
+
+    /**
+     * The exception handler for handling exceptions occurring when processing Websockets.
+     *
+     * @var Handler
+     */
+    protected $handler = ExceptionHandler::class; // set your own exception handling class here
 }

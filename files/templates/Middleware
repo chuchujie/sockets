@@ -22,5 +22,6 @@ class {{name}} implements Middleware
     public function handle(SocketRequest &$request, Closure $next)
     {
         // TODO: Implement handle() method.
+        return $next($request);
     }
 }
