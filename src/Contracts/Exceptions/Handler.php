@@ -14,11 +14,11 @@ use Illuminate\Contracts\Foundation\Application;
 abstract class Handler
 {
     /**
-     * The registered exception handlers.
+     * The registered exception catchers.
      *
      * @var array
      */
-    protected $handlers = [];
+    protected $catchers = [];
 
     /**
      * The laravel application.
@@ -59,11 +59,11 @@ abstract class Handler
     public function handle(SocketClient $client, Exception $exception)
     {
         $type = get_class($exception);
-        foreach ($this->handlers as $handler => $handles) {
-            $handles = is_array($handles) ? $handles : [$handles];
+        foreach ($this->catchers as $catcher => $catches) {
+            $catches = is_array($catches) ? $catches : [$catches];
 
-            if (in_array($type, $handles)) {
-                return $this->app->make($handler)->handle($client, $exception);
+            if (in_array($type, $catches)) {
+                return $this->app->make($catcher)->handle($client, $exception);
             }
         }
 

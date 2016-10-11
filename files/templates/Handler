@@ -13,11 +13,11 @@ use Experus\Sockets\Core\Client\SocketClient;
 class {{name}} extends Handler
 {
     /**
-     * The registered exception handlers.
+     * The registered exception catchers.
      *
      * @var array
      */
-    protected $handlers = [
+    protected $catchers = [
     ];
 
     /**
