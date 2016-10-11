@@ -28,11 +28,11 @@ trait MiddlewareDispatcher
         $index = 0;
 
         $next = function(&$request) use ($size, &$index, &$middlewares, &$next) {
-            if ($size == $index++) {
+            if ($size <= $index) {
                 return null;
             }
 
-            return $this->app->make($middlewares[$index])->handle($request, $next);
+            return $middlewares[$index++]->handle($request, $next);
         };
 
         return $next($request);
