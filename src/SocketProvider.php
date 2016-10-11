@@ -11,7 +11,7 @@ use Experus\Sockets\Contracts\Exceptions\Handler;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
-use Experus\Sockets\Core\Exceptions\StubHandler;
+use Experus\Sockets\Core\Exceptions\DebugHandler;
 use Experus\Sockets\Core\Protocols\ExperusProtocol;
 use Experus\Sockets\Core\Routing\SocketRouter;
 use Experus\Sockets\Core\Server\SocketServer;
@@ -52,7 +52,7 @@ class SocketProvider extends ServiceProvider
      *
      * @var Handler
      */
-    protected $handler = StubHandler::class;
+    protected $handler = DebugHandler::class;
 
     /**
      * The bindings this service provider provides.

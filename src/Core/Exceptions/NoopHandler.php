@@ -6,10 +6,10 @@ namespace Experus\Sockets\Core\Exceptions;
 use Experus\Sockets\Contracts\Exceptions\Handler;
 
 /**
- * Class StubHandler just passes exceptions back up the stack, effectively doing a noop with the exceptions.
+ * Class NoopHandler does nothing with the exception, which triggers the default behaviour (send exception to client and close socket).
  *
  * @package Experus\Sockets\Core\Exceptions
  */
-class StubHandler extends Handler
+class NoopHandler extends Handler
 {
 }
