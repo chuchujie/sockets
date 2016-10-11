@@ -101,10 +101,15 @@ TODO
 
 ### Whitelisting and blacklisting
 
+TODO
+
+### Artisan helpers
+
+TODO
+
 ### Roadmap
 
 - write unit tests
 - provide in depth documentation for each subject
-- implement exception handling stack similiar to experus\exceptions
 - implement channels
 - allow creating topics or something
