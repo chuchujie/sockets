@@ -13,7 +13,12 @@ use Illuminate\Contracts\Foundation\Application;
  */
 abstract class Handler
 {
-    public $handlers = [];
+    /**
+     * The registered exception handlers.
+     *
+     * @var array
+     */
+    protected $handlers = [];
 
     /**
      * The laravel application.
