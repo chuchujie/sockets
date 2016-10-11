@@ -4,6 +4,7 @@
 namespace Experus\Sockets;
 
 use Experus\Sockets\Commands\GenerateControllerCommand;
+use Experus\Sockets\Commands\GenerateHandlerCommand;
 use Experus\Sockets\Commands\GenerateMiddlewareCommand;
 use Experus\Sockets\Commands\GenerateProviderCommand;
 use Experus\Sockets\Commands\ServeCommand;
@@ -78,6 +79,7 @@ class SocketProvider extends ServiceProvider
             GenerateControllerCommand::class,
             GenerateMiddlewareCommand::class,
             GenerateProviderCommand::class,
+            GenerateHandlerCommand::class,
         ]);
 
         $this->registerMiddleware();

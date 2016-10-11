@@ -11,7 +11,7 @@ class GenerateHandlerCommand extends AbstractGeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'socket:controller {name : The name of the handler} {--namespace= : The namespace of the handler to generate} {--dir= : The root directory}';
+    protected $signature = 'socket:handler {name : The name of the handler} {--namespace= : The namespace of the handler to generate} {--dir= : The root directory}';
 
     /**
      * The console command description.
