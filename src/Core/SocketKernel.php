@@ -6,6 +6,7 @@ namespace Experus\Sockets\Core;
 use Experus\Sockets\Contracts\Kernel;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
+use Illuminate\Console\OutputStyle;
 use Illuminate\Contracts\Foundation\Application;
 use Ratchet\Http\HttpServer;
 use Ratchet\Http\OriginCheck;
@@ -56,7 +57,7 @@ class SocketKernel implements Kernel
     /**
      * The Symfony output interface.
      *
-     * @var \Symfony\Component\Console\Output\OutputInterface
+     * @var \Illuminate\Console\OutputStyle
      */
     private $output;
 
@@ -109,7 +110,7 @@ class SocketKernel implements Kernel
     public function init(Input $input, Output $output)
     {
         $this->input = $input;
-        $this->output = $output;
+        $this->output = new OutputStyle($input, $output);
         $this->server = $this->app->make(Server::class);
         $this->router = $this->app->make(Router::class);
         $this->whitelist = new HttpServer(new OriginCheck(new WsServer($this->server), ['localhost']));
@@ -125,7 +126,7 @@ class SocketKernel implements Kernel
      */
     public function listen()
     {
-        $this->output->writeln('Listening for incoming connections on ' . $this->getHost() . ':' . $this->getPort());
+        $this->output->success('Listening for incoming connections on ' . $this->getHost() . ':' . $this->getPort());
 
         IoServer::factory($this->whitelist, $this->getPort(), $this->getHost())->run();
     }
