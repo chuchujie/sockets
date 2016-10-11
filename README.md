@@ -97,7 +97,7 @@ You can register listeners for these events as if they were [regular laravel eve
 
 ### Exceptions
 
-TODO
+TODO (note the existence of NoopHandler and DebugHandler)
 
 ### Whitelisting and blacklisting
 
