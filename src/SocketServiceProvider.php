@@ -25,7 +25,7 @@ use Illuminate\Support\ServiceProvider;
  * Class SocketProvider installs the contracts from the socket package and publishes the required config files.
  * @package Experus\Sockets
  */
-class SocketProvider extends ServiceProvider
+class SocketServiceProvider extends ServiceProvider
 {
 
     /**

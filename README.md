@@ -6,7 +6,7 @@ Sockets is a laravel package that allows your application to handle Websockets w
 ## Installation (quickstart)
 
 - Install the package from `experus/sockets`
-- Register `\Experus\Sockets\SocketProvider` in your service providers
+- Register `\Experus\Sockets\SocketServiceProvider` in your service providers
 - Run `php artisan vendor:publish --tag=sockets` to copy required files
 - Run `php artisan socket:serve` to start the socket server.
 
