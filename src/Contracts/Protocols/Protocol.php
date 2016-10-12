@@ -4,6 +4,7 @@
 namespace Experus\Sockets\Contracts\Protocols;
 
 use Experus\Sockets\Core\Server\SocketRequest;
+use Experus\Sockets\Exceptions\ParseException;
 
 /**
  * Interface Protocol is a contract describing how a message should be interpreted by the application.
@@ -32,7 +33,7 @@ interface Protocol
      *
      * @param SocketRequest $request
      * @return array|null|object
-     * @todo check if parsing works and throw ParseException if not
+     * @throws ParseException thrown when parsing fails.
      */
     public function parse(SocketRequest $request);
 }

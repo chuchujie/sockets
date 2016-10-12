@@ -5,6 +5,7 @@ namespace Experus\Sockets\Core\Protocols;
 
 use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Core\Server\SocketRequest;
+use Experus\Sockets\Exceptions\ParseException;
 
 class ExperusProtocol implements Protocol
 {
@@ -34,9 +35,16 @@ class ExperusProtocol implements Protocol
      *
      * @param SocketRequest $request
      * @return array|null|object
+     * @throws ParseException thrown when parsing fails.
      */
     public function parse(SocketRequest $request)
     {
-        return json_decode($request->raw());
+        $result = json_decode($request->raw());
+
+        if (is_null($result)) {
+            throw new ParseException($request->raw());
+        }
+
+        return $result;
     }
 }
