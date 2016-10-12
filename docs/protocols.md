@@ -66,4 +66,6 @@ sockets comes with a default protocol to play around with, called `experus` inte
 
 ### Generating protocols
 
-**Currently there's no command available to generate protocols**
+Since writing protocol boilerplate code is tedious and not exactly fun, sockets provides you with a command that generates the boilerplate code for you.
+
+Simply run `php artisan socket:protocol SocketProtocol` and sockets will generate a protocol named *SocketProtocol* for you. You can obviously specify any name you want in place of *SocketProtocol*. For a reference of possible parameters and available command see the [documentation](artisan.md).

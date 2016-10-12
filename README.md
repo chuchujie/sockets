@@ -37,3 +37,7 @@ Make your laravel application realtime
 - [ ] generate protocols
 - [ ] fire event on startup of server
 - [ ] fire event on shutdown of server
+- [ ] add session support
+- [ ] extend request to expose "user" if applicable (from session)
+- [ ] extend request to expose session
+- [ ] extend request to expose origin (IP)
