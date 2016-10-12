@@ -6,6 +6,8 @@ namespace Experus\Sockets\Core;
 use Experus\Sockets\Contracts\Kernel;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
+use Experus\Sockets\Events\SocketServerClosedEvent;
+use Experus\Sockets\Events\SocketServerStartedEvent;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Contracts\Foundation\Application;
 use Ratchet\Http\HttpServer;
@@ -64,7 +66,7 @@ class SocketKernel implements Kernel
     /**
      * The running socket server.
      *
-     * @var \Ratchet\MessageComponentInterface
+     * @var Server
      */
     private $server;
 
@@ -128,7 +130,9 @@ class SocketKernel implements Kernel
     {
         $this->output->success('Listening for incoming connections on ' . $this->getHost() . ':' . $this->getPort());
 
+        $this->app->make('events')->fire(new SocketServerStartedEvent($this->server));
         IoServer::factory($this->whitelist, $this->getPort(), $this->getHost())->run();
+        $this->app->make('events')->fire(new SocketServerClosedEvent);
     }
 
     /**
