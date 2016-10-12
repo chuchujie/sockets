@@ -1,5 +1,7 @@
 # sockets
-Make your laravel application realtime
+Make your laravel application realtime.
+
+Sockets is a laravel package that allows your application to handle Websockets without the need of an external NodeJS server, fiddling with Redis servers to wire up your Laravel application with that NodeJS server. Sockets aims to integrate Laravel with a high performance real time WebSockets framework written in PHP, making working with WebSockets as easy as Laravel makes working with HTTP requests.
 
 ## Installation (quickstart)
 
