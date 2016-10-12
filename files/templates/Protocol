@@ -22,4 +22,26 @@ class {{name}} implements Protocol
     {
         // TODO return the route of this request
     }
+
+    /**
+     * Return the body of the request, stripping out all meta data such as route, auth, ...
+     *
+     * @return string
+     */
+    public function body(SocketRequest $request)
+    {
+        // TODO: Implement body() method.
+    }
+
+    /**
+     * Return the parsed form of the request body as an array, an object or null if this protocol does not support parsing.
+     *
+     * @param SocketRequest $request
+     * @return array|null|object
+     * @todo check if parsing works and throw ParseException if not
+     */
+    public function parse(SocketRequest $request)
+    {
+        // TODO: Implement parse() method.
+    }
 }

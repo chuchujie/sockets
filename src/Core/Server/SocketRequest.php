@@ -55,22 +55,11 @@ class SocketRequest
     /**
      * Retrieve the body as an object or array.
      *
-     * @param bool $assoc if true the result will be returned as an array, if false this functions returns an object.
      * @return array|object|null
      */
-    public function json($assoc = false)
+    public function parse()
     {
-        return json_decode($this->message, $assoc);
-    }
-
-    /**
-     * Check if the body is valid JSON.
-     *
-     * @return bool
-     */
-    public function isJson()
-    {
-        return (strpos($this->message, '{', 0) === 0 || strpos($this->message, '[', 0) === 0);
+        return $this->protocol->parse($this);
     }
 
     /**
@@ -80,7 +69,7 @@ class SocketRequest
      */
     public function body()
     {
-        return $this->message;
+        return $this->protocol->body($this);
     }
 
     /**
@@ -91,5 +80,10 @@ class SocketRequest
     public function path()
     {
         return $this->protocol->route($this);
+    }
+
+    public function raw()
+    {
+        return $this->message;
     }
 }
