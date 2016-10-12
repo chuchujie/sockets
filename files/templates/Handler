@@ -1,0 +1,36 @@
+<?php
+
+namespace {{namespace}};
+
+use Exception;
+use Experus\Sockets\Contracts\Exceptions\Handler;
+use Experus\Sockets\Core\Client\SocketClient;
+
+/**
+ * Class {{name}}
+ * @package {{namespace}}
+ */
+class {{name}} extends Handler
+{
+    /**
+     * The registered exception catchers.
+     *
+     * @var array
+     */
+    protected $catchers = [
+    ];
+
+    /**
+     * Called when an exception does not have a registered handler.
+     *
+     * @param SocketClient $client
+     * @param Exception $exception
+     * @return array|null|object
+     * @throws Exception if the exception thrown is fatal.
+     * @note When throwing an exception in the handler, the entire server will halt.
+     */
+    public function unhandled(SocketClient $client, Exception $exception)
+    {
+        throw $exception; // crash application.
+    }
+}

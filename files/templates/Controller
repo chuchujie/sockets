@@ -1,0 +1,11 @@
+<?php
+
+namespace {{namespace}};
+
+/**
+ * Class {{name}}
+ * @package {{namespace}}
+ */
+class {{name}}
+{
+}

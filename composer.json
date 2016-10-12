@@ -14,5 +14,10 @@
             "Experus\\Sockets\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "illuminate/support": "^5.3",
+        "symfony/console": "^3.1",
+        "cboden/ratchet": "^0.3.5",
+        "illuminate/console": "^5.3"
+    }
 }

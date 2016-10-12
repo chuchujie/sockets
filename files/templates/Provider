@@ -1,0 +1,33 @@
+<?php
+
+namespace {{namespace}};
+
+use \Experus\Sockets\SocketProvider as ServiceProvider;
+
+class {{name}} extends ServiceProvider
+{
+    /**
+     * The middlewares to apply to incoming requests.
+     *
+     * @var array
+     */
+    protected $middlewares = [
+        // register your global middlewares here
+    ];
+
+    /**
+     * All the protocols supported by this application.
+     *
+     * @var array
+     */
+    protected $protocols = [
+        // register your protocols here
+    ];
+
+    /**
+     * The exception handler for handling exceptions occurring when processing Websockets.
+     *
+     * @var Handler
+     */
+    protected $handler = ExceptionHandler::class; // set your own exception handling class here
+}

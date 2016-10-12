@@ -1,0 +1,27 @@
+<?php
+
+namespace {{namespace}};
+
+use Closure;
+use Experus\Sockets\Core\Server\SocketRequest;
+use Experus\Sockets\Contracts\Middlewares\Middleware;
+
+/**
+ * Class {{name}}
+ * @package {{namespace}}
+ */
+class {{name}} implements Middleware
+{
+    /**
+     * Pass the request through the middleware.
+     *
+     * @param mixed $request The request to handle.
+     * @param Closure $next The next middleware.
+     * @return array|null|object A premature response or nothing.
+     */
+    public function handle(SocketRequest &$request, Closure $next)
+    {
+        // TODO: Implement handle() method.
+        return $next($request);
+    }
+}
