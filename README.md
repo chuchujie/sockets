@@ -26,19 +26,19 @@ Sockets is a laravel package that allows your application to handle Websockets w
 ### Roadmap
 
 - [ ] write unit tests
-- [ ] provide in depth documentation for each subject
+- [x] provide in depth documentation for each subject
 - [ ] implement channels
 - [ ] allow creating topics or something
 - [ ] prefix property on routes
-- [ ] command that sets up everything (vendor:publish, generate provider, middleware, controller, handler and protocols)
+- [x] command that sets up everything (vendor:publish, generate provider, middleware, controller, handler and protocols)
 - [ ] maybe write a client side library for sockets?
 - [ ] protocols need to specify how to extract payload
-- [ ] generalize json() method on request to parse (ex: for xml)
+- [x] generalize json() method on request to parse (ex: for xml)
 - [ ] finish experus protocol
 - [ ] named middlewares
-- [ ] generate protocols
-- [ ] fire event on startup of server
-- [ ] fire event on shutdown of server
+- [x] generate protocols
+- [x] fire event on startup of server
+- [x] fire event on shutdown of server
 - [ ] add session support
 - [ ] extend request to expose "user" if applicable (from session)
 - [ ] extend request to expose session
