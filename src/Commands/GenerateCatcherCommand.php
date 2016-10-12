@@ -3,7 +3,10 @@
 
 namespace Experus\Sockets\Commands;
 
-
+/**
+ * Class GenerateCatcherCommand generates catchers.
+ * @package Experus\Sockets\Commands
+ */
 class GenerateCatcherCommand extends AbstractGeneratorCommand
 {
     /**

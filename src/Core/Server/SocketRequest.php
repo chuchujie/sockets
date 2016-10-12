@@ -6,6 +6,10 @@ namespace Experus\Sockets\Core\Server;
 use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Core\Client\SocketClient;
 
+/**
+ * Class SocketRequest provides access to the request a socket send to the server.
+ * @package Experus\Sockets\Core\Server
+ */
 class SocketRequest
 {
     /**
@@ -82,6 +86,11 @@ class SocketRequest
         return $this->protocol->route($this);
     }
 
+    /**
+     * Get the raw string received from the client.
+     *
+     * @return string
+     */
     public function raw()
     {
         return $this->message;

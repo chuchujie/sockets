@@ -12,6 +12,8 @@ use Experus\Sockets\Core\Client\SocketClient;
 class SocketDisconnectedEvent
 {
     /**
+     * The client that (is about to) disconnect(ed).
+     *
      * @var SocketClient
      */
     private $client;

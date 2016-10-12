@@ -3,7 +3,10 @@
 
 namespace Experus\Sockets\Commands;
 
-
+/**
+ * Class GenerateHandlerCommand generates exception handlers.
+ * @package Experus\Sockets\Commands
+ */
 class GenerateHandlerCommand extends AbstractGeneratorCommand
 {
     /**

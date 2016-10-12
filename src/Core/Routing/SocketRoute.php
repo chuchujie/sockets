@@ -12,6 +12,10 @@ use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use RuntimeException;
 
+/**
+ * Class SocketRoute represents a route in the sockets routing system, holding information about it's path, action etc.
+ * @package Experus\Sockets\Core\Routing
+ */
 class SocketRoute
 {
     use MiddlewareDispatcher;

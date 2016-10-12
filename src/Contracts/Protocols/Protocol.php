@@ -24,6 +24,7 @@ interface Protocol
     /**
      * Return the body of the request, stripping out all meta data such as route, auth, ...
      *
+     * @param SocketRequest $request
      * @return string
      */
     public function body(SocketRequest $request);

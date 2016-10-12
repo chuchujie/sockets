@@ -5,6 +5,10 @@ namespace Experus\Sockets\Commands;
 
 use Experus\Sockets\Contracts\Kernel;
 
+/**
+ * Class GenerateControllerCommand generates controllers.
+ * @package Experus\Sockets\Commands
+ */
 class GenerateControllerCommand extends AbstractGeneratorCommand
 {
     /**

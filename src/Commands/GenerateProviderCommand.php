@@ -3,7 +3,10 @@
 
 namespace Experus\Sockets\Commands;
 
-
+/**
+ * Class GenerateProviderCommand generates SocketServiceProviders
+ * @package Experus\Sockets\Commands
+ */
 class GenerateProviderCommand extends AbstractGeneratorCommand
 {
     /**

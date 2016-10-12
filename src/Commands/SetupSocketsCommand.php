@@ -5,6 +5,10 @@ namespace Experus\Sockets\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * Class SetupSocketsCommand is a one-command setup tool for sockets.
+ * @package Experus\Sockets\Commands
+ */
 class SetupSocketsCommand extends Command
 {
     /**

@@ -3,7 +3,9 @@
 
 namespace Experus\Sockets\Core\Server;
 
+use Exception;
 use Experus\Sockets\Contracts\Exceptions\Handler;
+use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
@@ -22,6 +24,8 @@ class SocketServer implements Server
     use MiddlewareDispatcher;
 
     /**
+     * The laravel application instance.
+     *
      * @var Application
      */
     private $app;
@@ -59,7 +63,7 @@ class SocketServer implements Server
     /**
      * When a new connection is opened it will be passed to this method
      * @param  ConnectionInterface $conn The socket/connection that just connected to your application
-     * @throws \Exception
+     * @throws Exception
      */
     public function onOpen(ConnectionInterface $conn)
     {
@@ -73,7 +77,7 @@ class SocketServer implements Server
     /**
      * This is called before or after a socket is closed (depends on how it's closed).  SendMessage to $conn will not result in an error if it has already been closed.
      * @param  ConnectionInterface $conn The socket/connection that is closing/closed
-     * @throws \Exception
+     * @throws Exception
      */
     public function onClose(ConnectionInterface $conn)
     {
@@ -89,10 +93,10 @@ class SocketServer implements Server
      * If there is an error with one of the sockets, or somewhere in the application where an Exception is thrown,
      * the Exception is sent back down the stack, handled by the Server and bubbled back up the application through this method
      * @param  ConnectionInterface $connection
-     * @param  \Exception $exception
-     * @throws \Exception
+     * @param  Exception $exception
+     * @throws Exception
      */
-    public function onError(ConnectionInterface $connection, \Exception $exception)
+    public function onError(ConnectionInterface $connection, Exception $exception)
     {
         $client = $this->find($connection);
         $handler = $this->app->make(Handler::class);
@@ -118,7 +122,7 @@ class SocketServer implements Server
      * Triggered when a client sends data through the socket
      * @param  \Ratchet\ConnectionInterface $from The socket/connection that sent the message to your application
      * @param  string $msg The message received
-     * @throws \Exception
+     * @throws Exception
      */
     public function onMessage(ConnectionInterface $from, $msg)
     {
@@ -179,6 +183,12 @@ class SocketServer implements Server
         });
     }
 
+    /**
+     * Get the protocol the client uses.
+     *
+     * @param SocketClient $client
+     * @return Protocol
+     */
     private function protocol(SocketClient $client)
     {
         $protocol = array_first($this->protocols, function ($_, $protocol) use ($client) {

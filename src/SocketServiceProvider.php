@@ -115,7 +115,7 @@ class SocketServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register all middlewares
+     * Register all middlewares.
      */
     private function registerMiddleware()
     {
@@ -127,6 +127,9 @@ class SocketServiceProvider extends ServiceProvider
         }
     }
 
+    /**
+     * Register all protocols.
+     */
     private function registerProtocols()
     {
         $server = $this->app->make(Server::class);

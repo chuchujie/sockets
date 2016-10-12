@@ -3,6 +3,10 @@
 
 namespace Experus\Sockets\Commands;
 
+/**
+ * Class GenerateMiddlewareCommand generates middleware.
+ * @package Experus\Sockets\Commands
+ */
 class GenerateMiddlewareCommand extends AbstractGeneratorCommand
 {
     /**

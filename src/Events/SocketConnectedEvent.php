@@ -12,6 +12,8 @@ use Experus\Sockets\Core\Client\SocketClient;
 class SocketConnectedEvent
 {
     /**
+     * The client that just connected to the server.
+     *
      * @var SocketClient
      */
     private $client;

@@ -27,6 +27,8 @@ class ServeCommand extends Command
     protected $description = 'Start a socket server';
 
     /**
+     * The laravel application instance.
+     *
      * @var Application
      */
     private $app;

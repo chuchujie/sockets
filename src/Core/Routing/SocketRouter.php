@@ -44,6 +44,10 @@ class SocketRouter implements Router
      */
     private $app;
 
+    /**
+     * SocketRouter constructor.
+     * @param Application $app
+     */
     public function __construct(Application $app)
     {
         $this->app = $app;
@@ -108,7 +112,7 @@ class SocketRouter implements Router
      *
      * @param SocketRequest $request
      * @return array|null|object The response.
-     * @throws \Exception When no matching route is found.
+     * @throws NotFoundException When no matching route is found.
      */
     public function dispatch(SocketRequest $request)
     {

@@ -6,9 +6,15 @@ namespace Experus\Sockets\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Foundation\Application;
 
+/**
+ * Class AbstractGeneratorCommand provides a base class for commands that generate classes from templates.
+ * @package Experus\Sockets\Commands
+ */
 abstract class AbstractGeneratorCommand extends Command
 {
     /**
+     * The laravel application instance.
+     *
      * @var Application
      */
     protected $app;

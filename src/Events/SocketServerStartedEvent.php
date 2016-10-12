@@ -12,6 +12,8 @@ use Experus\Sockets\Contracts\Server\Server;
 class SocketServerStartedEvent
 {
     /**
+     * The Server that's about to start listening for incoming connections.
+     *
      * @var Server
      */
     private $server;

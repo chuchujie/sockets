@@ -3,6 +3,10 @@
 
 namespace Experus\Sockets\Commands;
 
+/**
+ * Class GenerateProtocolCommand generates socket protocols.
+ * @package Experus\Sockets\Commands
+ */
 class GenerateProtocolCommand extends AbstractGeneratorCommand
 {
     /**
