@@ -62,7 +62,7 @@ class SocketRouter implements Router
      */
     public function socket($uri, $action)
     {
-        $action = (is_array($action) ? $action : $action = ['uses' => $action]);
+        $action = (is_array($action) ? $action : $action = [SocketRoute::ACTION => $action]);
 
         $this->routes[] = new SocketRoute($uri, $action, $this->channel, $this->properties, $this->app);
 
@@ -102,7 +102,7 @@ class SocketRouter implements Router
 
         $callback($this);
 
-        $this->channel = '';
+        $this->channel = ''; // TODO shit...
 
         return $this;
     }
