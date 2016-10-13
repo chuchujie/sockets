@@ -58,8 +58,6 @@ class SetupSocketsCommand extends Command
         $this->setupMiddlewares();
         $this->setupHandlers();
         $this->setupCatchers();
-
-        dd($this->customProvider);
     }
 
     /**

@@ -51,8 +51,6 @@ class SocketClient
      */
     public function write($data)
     {
-        $data = json_encode($data);
-
         $this->socket->send($data);
     }
 

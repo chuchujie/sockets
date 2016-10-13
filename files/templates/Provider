@@ -2,7 +2,7 @@
 
 namespace {{namespace}};
 
-use \Experus\Sockets\SocketProvider as ServiceProvider;
+use \Experus\Sockets\SocketServiceProvider as ServiceProvider;
 
 class {{name}} extends ServiceProvider
 {
