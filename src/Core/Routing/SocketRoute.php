@@ -180,8 +180,9 @@ class SocketRoute
         }
 
         list($controller, $action) = explode('@', $this->attributes[self::ACTION]);
+        $namespace = (isset($this->attributes[self::DOMAIN]) ? $this->attributes[self::DOMAIN] : '');
 
-        $controller = $this->app->make($this->attributes[self::DOMAIN] . '\\' . $controller);
+        $controller = $this->app->make($namespace . '\\' . $controller);
         $method = new ReflectionMethod($controller, $action);
         $parameters = $this->buildParameters($method, $request);
 
