@@ -44,3 +44,4 @@ Sockets is a laravel package that allows your application to handle Websockets w
 - [ ] extend request to expose "user" if applicable (from session)
 - [ ] extend request to expose session
 - [ ] extend request to expose origin (IP)
+- [ ] Protocol should validate contents (Experus throws unknown property when not passing in the required properties)
