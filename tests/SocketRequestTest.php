@@ -160,11 +160,11 @@ class SocketRequestTest extends TestCase
 
         $this->protocol->shouldReceive('parse')
             ->with($this->request)
-            ->andReturn(json_decode(self::JSON_BODY));
+            ->andThrow(ParseException::class);
 
         $this->expectException(ParseException::class);
 
-        self::assertEquals($this->request->parse(), json_decode(self::JSON_BODY));
+        $this->request->parse();
     }
 
     /**
@@ -197,13 +197,11 @@ class SocketRequestTest extends TestCase
 
         $this->protocol->shouldReceive('parse')
             ->with($this->request)
-            ->andReturn(@simplexml_load_string(self::MALFORMED_XML_BODY));
+            ->andThrow(ParseException::class);
 
         $this->expectException(ParseException::class);
 
-        $response = $this->request->parse();
-        self::assertEquals($response, @simplexml_load_string(self::MALFORMED_XML_BODY));
-        self::assertNotInstanceOf(SimpleXMLElement::class, $response, 'Invalid XML should not be parsed');
+        $this->request->parse();
     }
 
     /**
