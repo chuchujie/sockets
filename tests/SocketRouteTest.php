@@ -37,28 +37,40 @@ class SocketRouteTest extends TestCase
         $this->request = m::mock(SocketRequest::class);
     }
 
-    public function testEmptyAttributes()
+    /**
+	 * @test
+	 */
+	public function emptyAttributes()
     {
         $route = new SocketRoute(self::FOO_URL, [], '', [], $this->app);
 
         self::assertEquals($route->path(), self::FOO_URL, 'Route should have path ' . self::FOO_URL . '(has ' . $route->path() . ')');
     }
 
-    public function testNameAttribute()
+    /**
+	 * @test
+	 */
+	public function nameAttribute()
     {
         $route = new SocketRoute(self::FOO_URL, [], '', ['name' => self::TEST_NAME], $this->app);
 
         self::assertEquals($route->name(), self::TEST_NAME);
     }
 
-    public function testNameWithoutNameAttribute()
+    /**
+	 * @test
+	 */
+	public function nameWithoutNameAttribute()
     {
         $route = new SocketRoute(self::FOO_URL, [], '', [], $this->app);
 
         self::assertEquals($route->name(), self::FOO_URL, 'Route should use path as name when no name is given');
     }
 
-    public function testMatchFooWithBar()
+    /**
+	 * @test
+	 */
+	public function matchFooWithBar()
     {
         $foo = new SocketRoute(self::FOO_URL, [], '', [], $this->app);
         $this->request->shouldReceive('path')
@@ -68,7 +80,10 @@ class SocketRouteTest extends TestCase
         self::assertFalse($foo->match($this->request));
     }
 
-    public function testMatchFooWithFoo()
+    /**
+	 * @test
+	 */
+	public function matchFooWithFoo()
     {
         $foo = new SocketRoute(self::FOO_URL, [], '', [], $this->app);
         $this->request->shouldReceive('path')

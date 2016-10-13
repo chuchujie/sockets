@@ -31,24 +31,36 @@ class SocketRouterTest extends TestCase
         $this->router = m::mock(new SocketRouter($this->app));
     }
 
-    public function testRegisterRouteWithControllerAction()
+    /**
+	 * @test
+	 */
+	public function registerRouteWithControllerAction()
     {
         $this->router->socket(self::DUMMY_URL, ['uses' => 'FooController@foo']);
     }
 
-    public function testRegisterRouteWithString()
+    /**
+	 * @test
+	 */
+	public function registerRouteWithString()
     {
         $this->router->socket(self::DUMMY_URL, 'FooController@foo');
     }
 
-    public function testRegisterRouteWithClosure()
+    /**
+	 * @test
+	 */
+	public function registerRouteWithClosure()
     {
         $this->router->socket(self::DUMMY_URL, function() {
             throw new RuntimeException('Route closure should not have been called');
         });
     }
 
-    public function testDispatchToController()
+    /**
+	 * @test
+	 */
+	public function dispatchToController()
     {
         $this->router->socket(self::DUMMY_URL, ['uses' => 'FooController@foo']);
 
@@ -66,7 +78,10 @@ class SocketRouterTest extends TestCase
         self::assertEquals($response, FooController::DUMMY_RESPONSE);
     }
 
-    public function testDispatchToString()
+    /**
+	 * @test
+	 */
+	public function dispatchToString()
     {
         $this->router->socket(self::DUMMY_URL, 'FooController@foo');
 
@@ -84,7 +99,10 @@ class SocketRouterTest extends TestCase
         self::assertEquals($response, FooController::DUMMY_RESPONSE);
     }
 
-    public function testDispatchToClosure()
+    /**
+	 * @test
+	 */
+	public function dispatchToClosure()
     {
         $called = false;
         $this->router->socket(self::DUMMY_URL, function() use (&$called) {
@@ -101,7 +119,10 @@ class SocketRouterTest extends TestCase
         self::assertTrue($called);
     }
 
-    public function testDispatchWithoutRoutes()
+    /**
+	 * @test
+	 */
+	public function dispatchWithoutRoutes()
     {
         $request = m::mock(SocketRequest::class)
             ->shouldReceive('path')
@@ -112,7 +133,10 @@ class SocketRouterTest extends TestCase
         $this->router->dispatch($request);
     }
 
-    public function testDispatchWithoutMatchingRoutes()
+    /**
+	 * @test
+	 */
+	public function dispatchWithoutMatchingRoutes()
     {
         $this->router->socket(self::DUMMY_URL, function() {
             throw new AssertionError('Route closure should not have been called');
@@ -130,11 +154,17 @@ class SocketRouterTest extends TestCase
     /**
      * @todo implement when done with implementing channels
      */
-    public function testChannel()
+    /**
+	 * @test
+	 */
+	public function channel()
     {
     }
 
-    public function testGroupWithNamespace()
+    /**
+	 * @test
+	 */
+	public function groupWithNamespace()
     {
         $this->router->group(['namespace' => '\Mocks'], function($router) {
             $router->socket(self::DUMMY_URL, 'BarController@bar');

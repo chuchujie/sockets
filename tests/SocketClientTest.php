@@ -28,7 +28,10 @@ class SocketClientTest extends TestCase
     /**
      * Test writing a string to the socket.
      */
-    public function testWriteStringToSocket()
+    /**
+	 * @test
+	 */
+	public function writeStringToSocket()
     {
         $this->socket
             ->shouldReceive('send')
@@ -44,7 +47,10 @@ class SocketClientTest extends TestCase
     /**
      * Test closing the socket.
      */
-    public function testCloseSocket()
+    /**
+	 * @test
+	 */
+	public function closeSocket()
     {
         $this->socket
             ->shouldReceive('close')
@@ -59,7 +65,10 @@ class SocketClientTest extends TestCase
     /**
      * Test if the socket generates a unique identifier for each connection.
      */
-    public function testGeneratesUUID()
+    /**
+	 * @test
+	 */
+	public function generatesUUID()
     {
         $client = new SocketClient($this->socket);
         $client2 = new SocketClient($this->socket);
@@ -70,7 +79,10 @@ class SocketClientTest extends TestCase
     /**
      * Test if the same raw socket is equal when compared to the same socket wrapped in a client.
      */
-    public function testEquals()
+    /**
+	 * @test
+	 */
+	public function equals()
     {
         $client = new SocketClient($this->socket);
 
@@ -80,7 +92,10 @@ class SocketClientTest extends TestCase
     /**
      * Test if different connections are compared through the SocketClient they are not considered equal.
      */
-    public function testEqualsDifferentConnections()
+    /**
+	 * @test
+	 */
+	public function equalsDifferentConnections()
     {
         $client = new SocketClient($this->socket);
         $different = m::mock('\Ratchet\WebSocket\Version\RFC6455\Connection');
@@ -92,7 +107,7 @@ class SocketClientTest extends TestCase
      * Tests if the SocketClient can deal with connections that do not specify a protocol.
      * @todo Figure out how to set a public property, Ratchet somehow messes with the magic method making it very hard to set properties on the mock.
      */
-    public function _testWithoutProtocol()
+    public function withoutProtocol()
     {
         $websocket = new stdClass;
         $websocket->request = m::mock('\Guzzle\Http\Message\RequestInterface');

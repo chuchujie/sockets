@@ -40,7 +40,10 @@ class SocketServerTest extends TestCase
         $this->server = new SocketServer($this->app);
     }
 
-    public function testRegisterProtocols()
+    /**
+     * @test
+     */
+    public function registerProtocols()
     {
         $protocol = m::mock(Protocol::class);
 
@@ -50,7 +53,10 @@ class SocketServerTest extends TestCase
         self::assertEquals($this->server->getSubProtocols()[0], 'testprotocol');
     }
 
-    public function testClientConnects()
+    /**
+     * @test
+     */
+    public function clientConnects()
     {
         $this->app->shouldReceive('make')
             ->with('events')
@@ -59,7 +65,10 @@ class SocketServerTest extends TestCase
         $this->server->onOpen(m::mock(Connection::class));
     }
 
-    public function testClientAcceptsOnlyRFC6455()
+    /**
+     * @test
+     */
+    public function clientAcceptsOnlyRFC6455()
     {
         $this->app->shouldReceive('make')
             ->never();
@@ -69,7 +78,10 @@ class SocketServerTest extends TestCase
         $this->server->onOpen(m::mock(ConnectionInterface::class));
     }
 
-    public function testClientClosesConnection()
+    /**
+     * @test
+     */
+    public function clientClosesConnection()
     {
         $connection = m::mock(Connection::class);
         $connection->shouldReceive('write')->andThrow(RuntimeException::class);
@@ -83,27 +95,42 @@ class SocketServerTest extends TestCase
         $this->server->onClose($connection);
     }
 
-    public function testMessage()
+    /**
+     * @test
+     */
+    public function message()
     {
         // TODO we need to be able to mock public properties (to mock the WebSocket decorator)
     }
 
-    public function testMessageMultipleProtocols()
+    /**
+     * @test
+     */
+    public function messageMultipleProtocols()
     {
         // TODO we need to be able to mock public properties (to mock the WebSocket decorator)
     }
 
-    public function testRegisterMiddleware()
+    /**
+     * @test
+     */
+    public function registerMiddleware()
     {
         // TODO we need to be able to mock public properties (to mock the WebSocket decorator)
     }
 
-    public function testMessageFromMiddleware()
+    /**
+     * @test
+     */
+    public function messageFromMiddleware()
     {
         // TODO we need to be able to mock public properties (to mock the WebSocket decorator)
     }
 
-    public function testMessageThroughMiddleware()
+    /**
+     * @test
+     */
+    public function messageThroughMiddleware()
     {
         // TODO we need to be able to mock public properties (to mock the WebSocket decorator)
     }
