@@ -4,6 +4,7 @@
 
 use Experus\Sockets\Core\Routing\SocketRouter;
 use Experus\Sockets\Core\Server\SocketRequest;
+use Experus\Sockets\Exceptions\NotFoundException;
 use Illuminate\Contracts\Foundation\Application;
 use Mockery as m;
 
@@ -147,7 +148,6 @@ class SocketRouterTest extends TestCase
      * This should throw a NotFoundException.
      *
      * @test
-     * @todo specialize RuntimeException to NotFoundException
      */
     public function dispatchWithoutRoutes()
     {
@@ -156,7 +156,7 @@ class SocketRouterTest extends TestCase
             ->andReturn(self::DUMMY_URL)
             ->once()->mock();
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(NotFoundException::class);
         $this->router->dispatch($request);
     }
 
@@ -165,7 +165,6 @@ class SocketRouterTest extends TestCase
      * This should throw a NotFoundException.
      *
      * @test
-     * @todo specialize RuntimeException to NotFoundException
      */
     public function dispatchWithoutMatchingRoutes()
     {
@@ -178,7 +177,7 @@ class SocketRouterTest extends TestCase
             ->andReturn(null)
             ->twice()->mock();
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(NotFoundException::class);
         $this->router->dispatch($request);
     }
 
