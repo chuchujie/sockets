@@ -7,11 +7,37 @@ use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Core\Server\SocketRequest;
 use Mockery as m;
 
+/**
+ * Class SocketRequestTest tests the \Experus\Sockets\Core\Server\SocketRequest class.
+ */
 class SocketRequestTest extends TestCase
 {
+    /**
+     * A well formed JSON string.
+     *
+     * @var string
+     */
     const JSON_BODY = '{"hello":"world"}';
+
+    /**
+     * A malformed JSON string.
+     *
+     * @var string
+     */
     const MALFORMED_JSON_BODY = '{"hello":"world""}';
+
+    /**
+     * A well formed XML string.
+     *
+     * @var string
+     */
     const XML_BODY = '<root><body>hello</body></root>';
+
+    /**
+     * A malformed XML string.
+     *
+     * @var string
+     */
     const MALFORMED_XML_BODY = '<<root><body>hello</body></root>';
 
     /**
@@ -35,6 +61,9 @@ class SocketRequestTest extends TestCase
      */
     protected $request;
 
+    /**
+     * Set up the testing environment.
+     */
     public function setUp()
     {
         $this->client = null;
@@ -43,57 +72,71 @@ class SocketRequestTest extends TestCase
     }
 
     /**
-	 * @test
-	 */
-	public function createRequestEmptyBody()
+     * Test if we can create a request with an empty body.
+     *
+     * @test
+     */
+    public function createRequestEmptyBody()
     {
         $this->request = new SocketRequest($this->client, '', $this->protocol);
     }
 
     /**
-	 * @test
-	 */
-	public function createRequestNullBody()
+     * Test if we can create a request with null as body.
+     *
+     * @test
+     */
+    public function createRequestNullBody()
     {
         $this->request = new SocketRequest($this->client, null, $this->protocol);
     }
 
     /**
-	 * @test
-	 */
-	public function createRequestJsonBody()
+     * Test if we can create a client with a JSON string body.
+     *
+     * @test
+     */
+    public function createRequestJsonBody()
     {
         $this->request = new SocketRequest($this->client, self::JSON_BODY, $this->protocol);
     }
 
     /**
-	 * @test
-	 */
-	public function createRequestMalformedJsonBody()
+     * Test if we can create a client with a malformed JSON string body.
+     *
+     * @test
+     */
+    public function createRequestMalformedJsonBody()
     {
         $this->request = new SocketRequest($this->client, self::MALFORMED_JSON_BODY, $this->protocol);
     }
 
     /**
-	 * @test
-	 */
-	public function createRequestXmlBody()
+     * Test if we can create a request with an XML string body.
+     *
+     * @test
+     */
+    public function createRequestXmlBody()
     {
         $this->request = new SocketRequest($this->client, self::XML_BODY, $this->protocol);
     }
 
     /**
-	 * @test
-	 */
-	public function createRequestMalformedXmlBody()
+     * Test if we can create a request with a malformed XML string body.
+     *
+     * @test
+     */
+    public function createRequestMalformedXmlBody()
     {
         $this->request = new SocketRequest($this->client, self::MALFORMED_XML_BODY, $this->protocol);
     }
 
     /**
-	 * @test
-	 */
-	public function parseJsonBody()
+     * Test if we can parse a request with a JSON string body.
+     *
+     * @test
+     */
+    public function parseJsonBody()
     {
         $this->createRequestJsonBody();
 
@@ -105,9 +148,13 @@ class SocketRequestTest extends TestCase
     }
 
     /**
-	 * @test
-	 */
-	public function paseMalformedJsonBody()
+     * Test if we can parse a request with a malformed JSON string body.
+     * This should throw a ParseException since the body cannot be parsed.
+     *
+     * @test
+     * @todo add ParseException.
+     */
+    public function paseMalformedJsonBody()
     {
         $this->createRequestMalformedJsonBody();
 
@@ -121,9 +168,11 @@ class SocketRequestTest extends TestCase
     }
 
     /**
-	 * @test
-	 */
-	public function parseXmlBody()
+     * Test if we can parse a request with a XML string body.
+     *
+     * @test
+     */
+    public function parseXmlBody()
     {
         $this->createRequestXmlBody();
 
@@ -137,9 +186,13 @@ class SocketRequestTest extends TestCase
     }
 
     /**
-	 * @test
-	 */
-	public function parseMalformedXmlBody()
+     * Test if we can parse a request with a malformed XML string body.
+     * This should throw a ParseException since the body cannot be parsed.
+     *
+     * @test
+     * @todo add ParseException.
+     */
+    public function parseMalformedXmlBody()
     {
         $this->createRequestMalformedXmlBody();
 
@@ -156,9 +209,11 @@ class SocketRequestTest extends TestCase
     }
 
     /**
-	 * @test
-	 */
-	public function retrieveRawBody()
+     * Test if we can retrieve the raw string representation of what the client sent.
+     *
+     * @test
+     */
+    public function retrieveRawBody()
     {
         $this->createRequestJsonBody();
 

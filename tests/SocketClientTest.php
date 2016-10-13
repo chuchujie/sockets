@@ -6,7 +6,7 @@ use Experus\Sockets\Core\Client\SocketClient;
 use Mockery as m;
 
 /**
- * Class SocketClientTest tests the SocketClient class
+ * Class SocketClientTest tests the \Experus\Sockets\Core\Client\SocketClient class
  */
 class SocketClientTest extends TestCase
 {
@@ -27,11 +27,10 @@ class SocketClientTest extends TestCase
 
     /**
      * Test writing a string to the socket.
+     *
+     * @test
      */
-    /**
-	 * @test
-	 */
-	public function writeStringToSocket()
+    public function writeStringToSocket()
     {
         $this->socket
             ->shouldReceive('send')
@@ -46,11 +45,11 @@ class SocketClientTest extends TestCase
 
     /**
      * Test closing the socket.
+     *
+     *
+     * @test
      */
-    /**
-	 * @test
-	 */
-	public function closeSocket()
+    public function closeSocket()
     {
         $this->socket
             ->shouldReceive('close')
@@ -64,11 +63,10 @@ class SocketClientTest extends TestCase
 
     /**
      * Test if the socket generates a unique identifier for each connection.
+     *
+     * @test
      */
-    /**
-	 * @test
-	 */
-	public function generatesUUID()
+    public function generatesUUID()
     {
         $client = new SocketClient($this->socket);
         $client2 = new SocketClient($this->socket);
@@ -78,11 +76,10 @@ class SocketClientTest extends TestCase
 
     /**
      * Test if the same raw socket is equal when compared to the same socket wrapped in a client.
+     *
+     * @test
      */
-    /**
-	 * @test
-	 */
-	public function equals()
+    public function equals()
     {
         $client = new SocketClient($this->socket);
 
@@ -91,11 +88,10 @@ class SocketClientTest extends TestCase
 
     /**
      * Test if different connections are compared through the SocketClient they are not considered equal.
+     *
+     * @test
      */
-    /**
-	 * @test
-	 */
-	public function equalsDifferentConnections()
+    public function equalsDifferentConnections()
     {
         $client = new SocketClient($this->socket);
         $different = m::mock('\Ratchet\WebSocket\Version\RFC6455\Connection');

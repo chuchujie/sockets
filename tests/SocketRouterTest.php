@@ -7,8 +7,16 @@ use Experus\Sockets\Core\Server\SocketRequest;
 use Illuminate\Contracts\Foundation\Application;
 use Mockery as m;
 
+/**
+ * Class SocketRouterTest tests the \Experus\Sockets\Core\Routing\SocketRouter class.
+ */
 class SocketRouterTest extends TestCase
 {
+    /**
+     * A dummy URL for mocking routes
+     *
+     * @var string
+     */
     const DUMMY_URL = '/foo';
 
     /**
@@ -25,6 +33,9 @@ class SocketRouterTest extends TestCase
      */
     protected $app;
 
+    /**
+     * Set up the testing environment.
+     */
     public function setUp()
     {
         $this->app = m::mock(Application::class);
@@ -32,35 +43,43 @@ class SocketRouterTest extends TestCase
     }
 
     /**
-	 * @test
-	 */
-	public function registerRouteWithControllerAction()
+     * Test if we can register a route with an array style controller action.
+     *
+     * @test
+     */
+    public function registerRouteWithControllerAction()
     {
         $this->router->socket(self::DUMMY_URL, ['uses' => 'FooController@foo']);
     }
 
     /**
-	 * @test
-	 */
-	public function registerRouteWithString()
+     * Test if we can register a route with a string style controller action.
+     *
+     * @test
+     */
+    public function registerRouteWithString()
     {
         $this->router->socket(self::DUMMY_URL, 'FooController@foo');
     }
 
     /**
-	 * @test
-	 */
-	public function registerRouteWithClosure()
+     * Test if we can register a route with a closure style action.
+     *
+     * @test
+     */
+    public function registerRouteWithClosure()
     {
-        $this->router->socket(self::DUMMY_URL, function() {
+        $this->router->socket(self::DUMMY_URL, function () {
             throw new RuntimeException('Route closure should not have been called');
         });
     }
 
     /**
-	 * @test
-	 */
-	public function dispatchToController()
+     * Test if we can dispatch a route to an array style controller action.
+     *
+     * @test
+     */
+    public function dispatchToController()
     {
         $this->router->socket(self::DUMMY_URL, ['uses' => 'FooController@foo']);
 
@@ -79,9 +98,11 @@ class SocketRouterTest extends TestCase
     }
 
     /**
-	 * @test
-	 */
-	public function dispatchToString()
+     * Test if we can dispatch a route to a string style controller action.
+     *
+     * @test
+     */
+    public function dispatchToString()
     {
         $this->router->socket(self::DUMMY_URL, 'FooController@foo');
 
@@ -100,12 +121,14 @@ class SocketRouterTest extends TestCase
     }
 
     /**
-	 * @test
-	 */
-	public function dispatchToClosure()
+     * Test if we can dispatch a route to a closure style action.
+     *
+     * @test
+     */
+    public function dispatchToClosure()
     {
         $called = false;
-        $this->router->socket(self::DUMMY_URL, function() use (&$called) {
+        $this->router->socket(self::DUMMY_URL, function () use (&$called) {
             $called = true;
         });
 
@@ -120,9 +143,13 @@ class SocketRouterTest extends TestCase
     }
 
     /**
-	 * @test
-	 */
-	public function dispatchWithoutRoutes()
+     * Test if we can dispatch without routes.
+     * This should throw a NotFoundException.
+     *
+     * @test
+     * @todo specialize RuntimeException to NotFoundException
+     */
+    public function dispatchWithoutRoutes()
     {
         $request = m::mock(SocketRequest::class)
             ->shouldReceive('path')
@@ -134,11 +161,15 @@ class SocketRouterTest extends TestCase
     }
 
     /**
-	 * @test
-	 */
-	public function dispatchWithoutMatchingRoutes()
+     * Test if we can dispatch when routes are registered, but none match.
+     * This should throw a NotFoundException.
+     *
+     * @test
+     * @todo specialize RuntimeException to NotFoundException
+     */
+    public function dispatchWithoutMatchingRoutes()
     {
-        $this->router->socket(self::DUMMY_URL, function() {
+        $this->router->socket(self::DUMMY_URL, function () {
             throw new AssertionError('Route closure should not have been called');
         });
 
@@ -152,21 +183,23 @@ class SocketRouterTest extends TestCase
     }
 
     /**
+     * Test if we can register a route on a channel.
+     *
+     * @test
      * @todo implement when done with implementing channels
      */
-    /**
-	 * @test
-	 */
-	public function channel()
+    public function channel()
     {
     }
 
     /**
-	 * @test
-	 */
-	public function groupWithNamespace()
+     * Test if a group shares the namespace to it's sub routes.
+     *
+     * @test
+     */
+    public function groupWithNamespace()
     {
-        $this->router->group(['namespace' => '\Mocks'], function($router) {
+        $this->router->group(['namespace' => '\Mocks'], function ($router) {
             $router->socket(self::DUMMY_URL, 'BarController@bar');
         });
 

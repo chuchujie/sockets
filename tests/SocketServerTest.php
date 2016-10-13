@@ -10,6 +10,9 @@ use Mockery as m;
 use Ratchet\ConnectionInterface;
 use Ratchet\WebSocket\Version\RFC6455\Connection;
 
+/**
+ * Class SocketServerTest tests the \Experus\Sockets\Core\Server\SocketServer class.
+ */
 class SocketServerTest extends TestCase
 {
     /**
@@ -33,6 +36,9 @@ class SocketServerTest extends TestCase
      */
     protected $server;
 
+    /**
+     * Set up the testing environment.
+     */
     public function setUp()
     {
         $this->events = m::mock('events')->shouldReceive('fire')->andReturnNull();
@@ -41,6 +47,8 @@ class SocketServerTest extends TestCase
     }
 
     /**
+     * Test if we can register a protocol.
+     *
      * @test
      */
     public function registerProtocols()
@@ -54,6 +62,8 @@ class SocketServerTest extends TestCase
     }
 
     /**
+     * Test if the connect event fires when a client connects.
+     *
      * @test
      */
     public function clientConnects()
@@ -66,6 +76,8 @@ class SocketServerTest extends TestCase
     }
 
     /**
+     * Test if the client only allows WebSocket decorated requests.
+     *
      * @test
      */
     public function clientAcceptsOnlyRFC6455()
@@ -79,6 +91,8 @@ class SocketServerTest extends TestCase
     }
 
     /**
+     * Test if the close event is fired when closing a connection.
+     *
      * @test
      */
     public function clientClosesConnection()
@@ -96,6 +110,8 @@ class SocketServerTest extends TestCase
     }
 
     /**
+     * Test if we can send a message to a client.
+     *
      * @test
      */
     public function message()
@@ -104,6 +120,9 @@ class SocketServerTest extends TestCase
     }
 
     /**
+     * Test if we can send a message when there are multiple protocols registered.
+     * The server should automatically pick the correct protocol and transform the response accordingly.
+     *
      * @test
      */
     public function messageMultipleProtocols()
@@ -112,6 +131,8 @@ class SocketServerTest extends TestCase
     }
 
     /**
+     * Check if we can register middleware on the server.
+     *
      * @test
      */
     public function registerMiddleware()
@@ -120,6 +141,8 @@ class SocketServerTest extends TestCase
     }
 
     /**
+     * Test if we can respond early from middleware.
+     *
      * @test
      */
     public function messageFromMiddleware()
@@ -128,6 +151,8 @@ class SocketServerTest extends TestCase
     }
 
     /**
+     * Test if we can let a message pass through a middleware but not respond from it.
+     *
      * @test
      */
     public function messageThroughMiddleware()
