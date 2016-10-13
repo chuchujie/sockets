@@ -5,6 +5,7 @@
 use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Core\Server\SocketRequest;
+use Experus\Sockets\Exceptions\ParseException;
 use Mockery as m;
 
 /**
@@ -152,7 +153,6 @@ class SocketRequestTest extends TestCase
      * This should throw a ParseException since the body cannot be parsed.
      *
      * @test
-     * @todo add ParseException.
      */
     public function paseMalformedJsonBody()
     {
@@ -162,8 +162,8 @@ class SocketRequestTest extends TestCase
             ->with($this->request)
             ->andReturn(json_decode(self::JSON_BODY));
 
-        // TODO when parsing throws exception by contract, uncomment this.
-//        $this->expectException(RuntimeException::class);
+        $this->expectException(ParseException::class);
+
         self::assertEquals($this->request->parse(), json_decode(self::JSON_BODY));
     }
 
@@ -190,7 +190,6 @@ class SocketRequestTest extends TestCase
      * This should throw a ParseException since the body cannot be parsed.
      *
      * @test
-     * @todo add ParseException.
      */
     public function parseMalformedXmlBody()
     {
@@ -200,8 +199,7 @@ class SocketRequestTest extends TestCase
             ->with($this->request)
             ->andReturn(@simplexml_load_string(self::MALFORMED_XML_BODY));
 
-        // TODO when parsing throws exception by contract, uncomment this.
-//        $this->expectException(RuntimeException::class);
+        $this->expectException(ParseException::class);
 
         $response = $this->request->parse();
         self::assertEquals($response, @simplexml_load_string(self::MALFORMED_XML_BODY));
