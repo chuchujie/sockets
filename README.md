@@ -1,7 +1,10 @@
-# sockets [![Build Status](https://travis-ci.org/Experus/sockets.svg?branch=master)](https://travis-ci.org/Experus/sockets)
-Make your laravel application realtime.
+# sockets
+ 
+[![Build Status](https://travis-ci.org/Experus/sockets.svg?branch=dev)](https://travis-ci.org/Experus/sockets) [![Latest Stable Version](https://poser.pugx.org/experus/sockets/v/stable)](https://packagist.org/packages/experus/sockets) [![License](https://poser.pugx.org/experus/sockets/license)](https://packagist.org/packages/experus/sockets) [![Monthly Downloads](https://poser.pugx.org/experus/sockets/d/monthly)](https://packagist.org/packages/experus/sockets)
 
-Sockets is a laravel package that allows your application to handle Websockets without the need of an external NodeJS server, fiddling with Redis servers to wire up your Laravel application with that NodeJS server. Sockets aims to integrate Laravel with a high performance real time WebSockets framework written in PHP, making working with WebSockets as easy as Laravel makes working with HTTP requests.
+*Make your laravel application realtime.*
+
+> Sockets is a laravel package that allows your application to handle Websockets without the need of an external NodeJS server, fiddling with Redis servers to wire up your Laravel application with that NodeJS server. Sockets aims to integrate Laravel with a high performance real time WebSockets framework written in PHP, making working with WebSockets as easy as Laravel makes working with HTTP requests.
 
 ## Installation (quickstart)
 
@@ -26,7 +29,7 @@ Sockets is a laravel package that allows your application to handle Websockets w
 
 ### Roadmap
 
-- [ ] write unit tests
+- [x] write unit tests
 - [x] provide in depth documentation for each subject
 - [ ] implement channels
 - [ ] allow creating topics or something
