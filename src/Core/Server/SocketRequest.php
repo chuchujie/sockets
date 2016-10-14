@@ -47,6 +47,16 @@ class SocketRequest
     }
 
     /**
+     * Get the client that made the request.
+     *
+     * @return SocketClient
+     */
+    public function client()
+    {
+        return $this->connection;
+    }
+
+    /**
      * Get the protocol used for this request.
      *
      * @return string
@@ -67,9 +77,9 @@ class SocketRequest
     }
 
     /**
-     * Return the raw body.
+     * Return the body (data) of the request.
      *
-     * @return string
+     * @return array|object|null|string
      */
     public function body()
     {

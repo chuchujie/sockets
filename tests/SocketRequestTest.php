@@ -215,4 +215,33 @@ class SocketRequestTest extends TestCase
 
         self::assertEquals($this->request->raw(), self::JSON_BODY);
     }
+
+    /**
+     * Test if we can retrieve the payload of the request (parsed body).
+     *
+     * @test
+     */
+    public function retrieveBody()
+    {
+        $this->createRequestJsonBody();
+
+        $this->protocol->shouldReceive('body')
+            ->with($this->request)
+            ->andReturn(json_decode(self::JSON_BODY))
+            ->once();
+
+        $this->request->body();
+    }
+
+    /**
+     * Test if we can retrieve the connection from the request.
+     *
+     * @test
+     */
+    public function retrieveConnection()
+    {
+        $this->createRequestEmptyBody();
+
+        self::assertEquals($this->request->client(), $this->client);
+    }
 }
