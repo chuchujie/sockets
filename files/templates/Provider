@@ -2,6 +2,8 @@
 
 namespace {{namespace}};
 
+use Experus\Sockets\Contracts\Exceptions\Handler;
+use Experus\Sockets\Core\Exceptions\DebugHandler;
 use \Experus\Sockets\SocketServiceProvider as ServiceProvider;
 
 class {{name}} extends ServiceProvider
@@ -29,5 +31,5 @@ class {{name}} extends ServiceProvider
      *
      * @var Handler
      */
-    protected $handler = ExceptionHandler::class; // set your own exception handling class here
+    protected $handler = DebugHandler::class; // set your own exception handling class here
 }
