@@ -6,6 +6,7 @@ namespace Experus\Sockets\Core\Protocols;
 use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Core\Server\SocketRequest;
 use Experus\Sockets\Exceptions\ParseException;
+use Experus\Sockets\Exceptions\SerializeException;
 
 /**
  * Class ExperusProtocol the default implementation of a protocol provided by sockets so you can play around with the framework.
@@ -51,5 +52,23 @@ class ExperusProtocol implements Protocol
         }
 
         return $result;
+    }
+
+    /**
+     * Serialize a response into the string representation that can be flushed into the sockets.
+     *
+     * @param array|null|object $data
+     * @return string
+     * @throws SerializeException when the given response cannot be serialized with this protocol.
+     */
+    public function serialize($data)
+    {
+        $serialized = json_encode($data);
+
+        if ($serialized === false) {
+            throw new SerializeException($data);
+        }
+
+        return $serialized;
     }
 }

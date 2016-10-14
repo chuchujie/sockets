@@ -5,6 +5,7 @@ namespace Experus\Sockets\Contracts\Protocols;
 
 use Experus\Sockets\Core\Server\SocketRequest;
 use Experus\Sockets\Exceptions\ParseException;
+use Experus\Sockets\Exceptions\SerializeException;
 
 /**
  * Interface Protocol is a contract describing how a message should be interpreted by the application.
@@ -37,4 +38,13 @@ interface Protocol
      * @throws ParseException thrown when parsing fails.
      */
     public function parse(SocketRequest $request);
+
+    /**
+     * Serialize a response into the string representation that can be flushed into the sockets.
+     *
+     * @param array|null|object $data
+     * @return string
+     * @throws SerializeException when the given response cannot be serialized with this protocol.
+     */
+    public function serialize($data);
 }

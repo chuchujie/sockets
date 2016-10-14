@@ -137,7 +137,9 @@ class SocketServer implements Server
 
         $response = is_null($response) ? $this->app->make(Router::class)->dispatch($request) : $response;
 
-        $client->write($response);
+        if (!is_null($response)) {
+            $client->write($protocol->serialize($response));
+        }
     }
 
     /**
