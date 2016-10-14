@@ -4,6 +4,7 @@
 
 use Experus\Sockets\Core\Client\SocketClient;
 use Mockery as m;
+use Ratchet\WebSocket\Version\RFC6455\Connection;
 
 /**
  * Class SocketClientTest tests the \Experus\Sockets\Core\Client\SocketClient class
@@ -13,7 +14,7 @@ class SocketClientTest extends TestCase
     /**
      * The mockery socket we're testing with.
      *
-     * @var \Mockery\MockInterface
+     * @var Connection|\Mockery\MockInterface
      */
     protected $socket;
 
@@ -101,7 +102,7 @@ class SocketClientTest extends TestCase
 
     /**
      * Tests if the SocketClient can deal with connections that do not specify a protocol.
-     * @todo Figure out how to set a public property, Ratchet somehow messes with the magic method making it very hard to set properties on the mock.
+     * @test
      */
     public function withoutProtocol()
     {
@@ -112,10 +113,34 @@ class SocketClientTest extends TestCase
             ->andReturn(false)
             ->once();
 
-        $this->socket->WebSocket = $websocket; // FFS
+        $this->setMagicProperty($this->socket, 'WebSocket', $websocket);
 
         $client = new SocketClient($this->socket);
 
         self::assertEquals($client->protocol(), SocketClient::DEFAULT_PROTOCOL);
+    }
+
+    /**
+     * Test if the SocketClient can deal with connections that specify a protocol.
+     * @test
+     */
+    public function withProtocol()
+    {
+        $websocket = new stdClass;
+        $websocket->request = m::mock('\Guzzle\Http\Message\RequestInterface');
+        $websocket->request->shouldReceive('hasHeader')
+            ->with(SocketClient::PROTOCOL_HEADER)
+            ->andReturn(true)
+            ->once();
+        $websocket->request->shouldReceive('getHeader')
+            ->with(SocketClient::PROTOCOL_HEADER)
+            ->andReturn('FOO')
+            ->once();
+
+        $this->setMagicProperty($this->socket, 'WebSocket', $websocket);
+
+        $client = new SocketClient($this->socket);
+
+        self::assertEquals($client->protocol(), 'FOO');
     }
 }
