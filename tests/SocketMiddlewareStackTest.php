@@ -2,7 +2,6 @@
 
 // Created by dealloc. All rights reserved.
 
-use Experus\Sockets\Contracts\Middlewares\Stack;
 use Experus\Sockets\Core\Middlewares\SocketMiddlewareStack;
 use Experus\Sockets\Exceptions\MiddlewareNotFoundException;
 use Illuminate\Contracts\Foundation\Application;
@@ -236,6 +235,6 @@ class SocketMiddlewareStackTest extends TestCase
 
         $this->stack->register(\Mocks\MockMiddleware::class);
 
-        self::assertEquals($this->stack->resolve(Stack::GLOBAL_STACK), [$mock]);
+        self::assertEquals($this->stack->resolve(), [$mock]);
     }
 }

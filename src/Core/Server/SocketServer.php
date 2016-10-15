@@ -5,11 +5,12 @@ namespace Experus\Sockets\Core\Server;
 
 use Exception;
 use Experus\Sockets\Contracts\Exceptions\Handler;
+use Experus\Sockets\Contracts\Middlewares\Stack;
 use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
-use Experus\Sockets\Core\Middlewares\MiddlewareDispatcher;
+use Experus\Sockets\Core\Middlewares\Pipeline;
 use Experus\Sockets\Events\SocketConnectedEvent;
 use Experus\Sockets\Events\SocketDisconnectedEvent;
 use Illuminate\Contracts\Foundation\Application;
@@ -21,8 +22,6 @@ use Ratchet\ConnectionInterface;
  */
 class SocketServer implements Server
 {
-    use MiddlewareDispatcher;
-
     /**
      * The laravel application instance.
      *
@@ -31,18 +30,25 @@ class SocketServer implements Server
     private $app;
 
     /**
+     * The middleware stack.
+     *
+     * @var Stack
+     */
+    private $stack;
+
+    /**
+     * The middleware pipeline.
+     *
+     * @var Pipeline
+     */
+    private $pipeline;
+
+    /**
      * The connected clients.
      *
      * @var array
      */
     private $clients = [];
-
-    /**
-     * Global middleware stack.
-     *
-     * @var array
-     */
-    private $middlewares = [];
 
     /**
      * The registered protocols available.
@@ -58,6 +64,8 @@ class SocketServer implements Server
     public function __construct(Application $app)
     {
         $this->app = $app;
+        $this->stack = $this->app->make(Stack::class);
+        $this->pipeline = new Pipeline();
     }
 
     /**
@@ -132,7 +140,7 @@ class SocketServer implements Server
         $response = null;
 
         if (!empty($this->middlewares)) {
-            $response = $this->runThrough($this->middlewares, $request);
+            $response = $this->pipeline->through($this->stack->resolve())->run($request);
         }
 
         $response = is_null($response) ? $this->app->make(Router::class)->dispatch($request) : $response;
@@ -149,16 +157,6 @@ class SocketServer implements Server
     public function getSubProtocols()
     {
         return array_keys($this->protocols);
-    }
-
-    /**
-     * Register a global middleware in the server.
-     *
-     * @param string $middleware
-     */
-    public function registerMiddleware($middleware)
-    {
-        $this->middlewares[] = $this->app->make($middleware);
     }
 
     /**

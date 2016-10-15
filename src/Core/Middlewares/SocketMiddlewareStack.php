@@ -15,6 +15,13 @@ use Illuminate\Contracts\Foundation\Application;
 class SocketMiddlewareStack implements Stack
 {
     /**
+     * The key for resolving the global stack.
+     *
+     * @var string
+     */
+    const GLOBAL_STACK = '__global__';
+
+    /**
      * The laravel application instance.
      *
      * @var Application
@@ -51,18 +58,22 @@ class SocketMiddlewareStack implements Stack
     /**
      * Resolve a middleware from the middleware stack.
      *
-     * @param string $middleware
+     * @param string|array|null $middleware
      * @return array|Middleware returns the resolved middleware or an array if the middleware was a group.
      * @throws MiddlewareNotFoundException
      */
-    public function resolve($middleware)
+    public function resolve($middleware = null)
     {
-        if (str_contains($middleware, '\\')) {
+        if (is_array($middleware) || str_contains($middleware, '\\')) {
             return $this->compile($middleware);
         }
 
         if (array_key_exists($middleware, $this->named)) {
             return $this->compile($this->named[$middleware]);
+        }
+
+        if (is_null($middleware)) {
+            return $this->compile($this->groups[self::GLOBAL_STACK]);
         }
 
         if (array_key_exists($middleware, $this->groups)) {
