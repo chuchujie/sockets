@@ -12,9 +12,16 @@ use Experus\Sockets\Exceptions\MiddlewareNotFoundException;
 interface Stack
 {
     /**
+     * The key for resolving the global stack.
+     *
+     * @var string
+     */
+    const GLOBAL_STACK = '__global__';
+
+    /**
      * Resolve a middleware from the middleware stack.
      *
-     * @param $middleware
+     * @param string $middleware
      * @return array|Middleware returns the resolved middleware or an array if the middleware was a group.
      * @throws MiddlewareNotFoundException
      */
@@ -22,6 +29,9 @@ interface Stack
 
     /**
      * Register a (named) middleware in the stack.
+     * If a name and middleware is given, it will register an alias.
+     * If only a middleware is given, it will be registered in the global middleware stack.
+     * If a name and an array is given, the middlewares will be registered as a group.
      *
      * @param string|array $name The name or the middleware(s) to register.
      * @param string|array|null $middleware The middleware(s) if a name was given.
