@@ -105,7 +105,7 @@ class SocketMiddlewareStack implements Stack
                 $class = $this->resolve($class);
             }
 
-            return $middleware;
+            return array_unique(array_flatten($middleware));
         }
 
         return $this->app->make($middleware);

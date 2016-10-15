@@ -170,6 +170,46 @@ class SocketMiddlewareStackTest extends TestCase
     }
 
     /**
+     * Test if we can resolve a group that contains a reference to another group.
+     *
+     * @test
+     */
+    public function resolveNestedGroup()
+    {
+        $mock = m::mock(\Mocks\MockMiddleware::class);
+        $this->app->shouldReceive('make')
+            ->with(\Mocks\MockMiddleware::class)
+            ->andReturn($mock)
+            ->once();
+
+        $this->stack->register('group1', [\Mocks\MockMiddleware::class]);
+        $this->stack->register('group2', ['group1']);
+
+        self::assertEquals($this->stack->resolve('group2'), [$mock]);
+    }
+
+    /**
+     * Test if we can resolve nested groups and eliminate duplicates.
+     *
+     * @test
+     * @todo optimize so that mockmiddleware is only resolved once.
+     */
+    public function resolveNestedGroupWithDuplicates()
+    {
+        $mock = m::mock(\Mocks\MockMiddleware::class);
+        $this->app->shouldReceive('make')
+            ->with(\Mocks\MockMiddleware::class)
+            ->andReturn($mock)
+            ->twice();
+
+        $this->stack->register('alias', \Mocks\MockMiddleware::class);
+        $this->stack->register('group1', ['alias', \Mocks\MockMiddleware::class]);
+        $this->stack->register('group2', ['group1']);
+
+        self::assertEquals($this->stack->resolve('group2'), [$mock]);
+    }
+
+    /**
      * Test if we can resolve a group that doesn't exist.
      *
      * @test
