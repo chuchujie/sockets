@@ -39,7 +39,7 @@
 - [ ] protocols need to specify how to extract payload
 - [x] generalize json() method on request to parse (ex: for xml)
 - [ ] finish experus protocol
-- [ ] named middlewares
+- [x] named middlewares
 - [x] generate protocols
 - [x] fire event on startup of server
 - [x] fire event on shutdown of server
