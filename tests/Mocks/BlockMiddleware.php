@@ -8,11 +8,13 @@ use Experus\Sockets\Contracts\Middlewares\Middleware;
 use Experus\Sockets\Core\Server\SocketRequest;
 
 /**
- * Class MockMiddleware is a mocked middleware class.
+ * Class BlockMiddleware is a mock middleware that returns rather than passing through.
  * @package Mocks
  */
-class MockMiddleware implements Middleware
+class BlockMiddleware implements Middleware
 {
+    const RESPONSE_TEXT = 'dummy';
+
     /**
      * Pass the request through the middleware.
      *
@@ -22,6 +24,6 @@ class MockMiddleware implements Middleware
      */
     public function handle(SocketRequest &$request, Closure $next)
     {
-        return $next($request);
+        return self::RESPONSE_TEXT;
     }
 }
