@@ -78,6 +78,8 @@ class SocketServiceProvider extends ServiceProvider
         foreach ($this->bindings as $contract => $binding) {
             $this->app->singleton($contract, $binding);
         }
+        $this->app->singleton(Handler::class, $this->handler);
+        $this->app->singleton(Stack::class, $this->stack);
 
         $this->commands([
             ServeCommand::class,
@@ -91,8 +93,6 @@ class SocketServiceProvider extends ServiceProvider
         ]);
 
         $this->registerProtocols();
-        $this->app->singleton(Handler::class, $this->handler);
-        $this->app->singleton(Stack::class, $this->stack);
     }
 
     /**
