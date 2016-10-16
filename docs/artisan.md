@@ -46,6 +46,21 @@ Let's break those arguments down:
 - **namespace** Allows you to specify a custom namespace (default: `App\Sockets\Middlewares`). Example: `php artisan socket:middleware SocketMiddleware --namespace='Foo\Bar\Baz'`
 - **dir** Allows you to specify a different root directory (default: *app/*). Example: `php artisan socket:middleware SocketMiddleware --dir=src`
 
+### Generate stack command
+
+The stack command generates the boilerplate code for setting up stacks. It sets up directory structures for you and provides you with an empty stack class so you can hack away.
+
+The generator will deduce where it needs to put the generated stack based on the root directory and the namespace.
+
+The syntax of the command looks like this:
+```sh
+php artisan socket:stack {name} {--namespace=} {--dir}
+```
+Let's break those arguments down:
+- **name** the name of the stack to generate (*required*). Example: `php artisan socket:stack SocketStack`
+- **namespace** Allows you to specify a custom namespace (default: `App\Sockets\Middlewares`). Example: `php artisan socket:stack SocketStack --namespace='Foo\Bar\Baz'`
+- **dir** Allows you to specify a different root directory (default: *app/*). Example: `php artisan socket:stack SocketStack --dir=src`
+
 ### Generate serviceprovider command
 
 The provider command generates the boilerplate code for setting up a serviceprovider. It sets up directory structures for you and provides you with an empty provider class so you can configure your app right away.

@@ -90,12 +90,84 @@ Sockets (just like laravel) has two sorts of middlewares: *global* and *route* m
 
 You can register *global* middlewares in your [provider](provider.md) and route middlewares are registered in the [routing stack](routing.md).
 
+### Registering middlewares
+
+All global middlewares, middleware groups and named middlewares are registered in the sockets middleware stack (`\Experus\Sockets\Contracts\Middlewares\Stack`), and all dispatchers will resolve the middlewares from this stack.
+
+Registering a stack is fortunately very easy (example blow generated with `php artisan socket:stack SocketStack`):
+```php
+<?php
+
+namespace App\Sockets\Middleware;
+
+use Experus\Sockets\Core\Middlewares\SocketMiddlewareStack as Stack;
+
+/**
+ * Class SocketStack provides easy customization of the middleware stack for sockets.
+ * @package App\Sockets\Middleware
+ */
+class SocketStack extends Stack
+{
+    /**
+     * The global middleware stack.
+     *
+     * @var array
+     */
+    protected $global = [];
+
+    /**
+     * All aliases for middlewares.
+     *
+     * @var array
+     */
+    protected $named = [];
+
+    /**
+     * All middleware groups.
+     *
+     * @var array
+     */
+    protected $groups = [];
+}
+```
+As you can see the stack has three properties for you to configure:
+- **global** is the global middleware stack, everything registered in here will be applied to every incoming request.
+- **named** is the alias middleware stack, here you can register your named middlewares.
+- **groups** is the group stack, here you can group together a set of middleware under a name so that you can easily reference them.
+
+Once you created your stack, you can register it in the [provider](provider.md)'s `$stack` property.
+
 ### Named middlewares
 
-**This feature is not implemented yet**
+A named route provides a semantic name for a middleware, say you have a middleware for authenticating users `\Foo\Bar\AuthenticateMiddleware`, you could do something like this in your stack:
+```php
+protected $named = [
+    'auth' => \Foo\Bar\AuthenticateMiddleware::class,
+];
+```
+This allows you to reference `auth` in your middleware lists rather than the full `\Foo\Bar\AuthenticateMiddleware`, which might make your code easier to read.
+
+### Grouped middlewares
+
+Sometimes you have a couple middlewares that you need to apply to a lot of routes, or that belong together semantically. Rather than typing them out everywhere you need them (which is hell to refactor and change later on) sockets allows you to group them together under an alias:
+```php
+protected $groups = [
+    'admin' => [
+        'auth',
+        \Foo\Bar\RedirectIfNotAdmin::class,
+    ],
+];
+```
+This will apply the `auth` middleware (see the example above for named middlewares) and then the `\Foo\Bar\RedirectIfNotAdmin` middleware. You can simply refer to the `admin` middleware, and the stack will apply all middleware in the group. You can even nest a group in a group (careful for circular references though!).
 
 ### Generating middleware
 
 Since writing middleware boilerplate code is tedious and not exactly fun, sockets provides you with a command that generates the boilerplate code for you.
 
 Simply run `php artisan socket:middleware SocketMiddleware` and sockets will generate a middleware named *SocketMiddleware* for you. You can obviously specify any name you want in place of *SocketMiddleware*. For a reference of possible parameters and available command see the [documentation](artisan.md).
+
+### Generating a stack
+
+Since writing stack boilerplate code is tedious and not exactly fun, sockets provides you with a command that generates the boilerplate code for you.
+
+Simply run `php artisan socket:stack SocketStack` and sockets will generate a stack named *SocketStack* for you. You can obviously specify any name you want in place of *SocketStack*. For a reference of possible parameters and available command see the [documentation](artisan.md).
