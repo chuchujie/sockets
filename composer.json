@@ -16,7 +16,8 @@
     },
     "autoload-dev": {
         "classmap": [
-            "tests/TestCase.php"
+            "tests/TestCase.php",
+            "tests/Mocks/FooController.php"
         ],
         "psr-4": {
             "Mocks\\": "tests/Mocks/"
