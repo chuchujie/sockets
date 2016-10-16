@@ -3,6 +3,8 @@
 
 namespace Experus\Sockets\Core\Client;
 
+use Experus\Sockets\Core\Session\SocketSessionFactory;
+use Illuminate\Session\SessionManager;
 use Ratchet\ConnectionInterface as Socket;
 use Ratchet\WebSocket\Version\RFC6455\Connection;
 use UnexpectedValueException;
@@ -42,16 +44,25 @@ class SocketClient
     private $socket;
 
     /**
+     * The session for this connection.
+     *
+     * @var SessionManager
+     */
+    private $session;
+
+    /**
      * SocketClient constructor.
      * @param Socket $socket the raw Ratchet socket to wrap.
+     * @param SocketSessionFactory $session
      */
-    public function __construct(Socket $socket)
+    public function __construct(Socket $socket, SocketSessionFactory $session)
     {
         if (!($socket instanceof Connection)) {
             throw new UnexpectedValueException('Invalid protocol passed to internal client'); // <- is our server wrapped in a WsServer?
         }
 
         $this->socket = $socket;
+        $this->session = $session->make($socket->WebSocket->request);
     }
 
     /**
@@ -124,5 +135,20 @@ class SocketClient
         }
 
         return null;
+    }
+
+    /**
+     * Get the session for this client or retrieve a value from the session.
+     *
+     * @param string|null $key (optional) the key to retrieve from the session.
+     * @return SessionManager|mixed
+     */
+    public function session($key = null)
+    {
+        if (is_null($key)) {
+            return $this->session;
+        }
+
+        return $this->session->get($key);
     }
 }

@@ -11,6 +11,7 @@ use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Core\Middlewares\Pipeline;
+use Experus\Sockets\Core\Session\SocketSessionFactory;
 use Experus\Sockets\Events\SocketConnectedEvent;
 use Experus\Sockets\Events\SocketDisconnectedEvent;
 use Illuminate\Contracts\Foundation\Application;
@@ -75,7 +76,8 @@ class SocketServer implements Server
      */
     public function onOpen(ConnectionInterface $conn)
     {
-        $client = new SocketClient($conn);
+        $session = $this->app->make(SocketSessionFactory::class); // the session for this connection
+        $client = new SocketClient($conn, $session);
 
         $this->clients[] = $client;
 
