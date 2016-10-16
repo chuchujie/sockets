@@ -174,4 +174,36 @@ class SocketClientTest extends TestCase
 
         self::assertEquals($client->protocol(), 'FOO');
     }
+
+    /**
+     * @test
+     * @todo Implement this test
+     */
+    public function retrieveHeader()
+    {
+    }
+
+    /**
+     * @test
+     * @todo Implement this test
+     */
+    public function retrieveHeaderDoesNotExist()
+    {
+    }
+
+    /**
+     * @test
+     * @todo Implement this test
+     */
+    public function retrieveSessionManager()
+    {
+    }
+
+    /**
+     * @test
+     * @todo Implement this test
+     */
+    public function retrieveSessionVariable()
+    {
+    }
 }

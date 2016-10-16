@@ -149,10 +149,10 @@ class SocketServerTest extends TestCase
      * Test if we can send a message to a client.
      *
      * @test
+     * @todo Implement this test
      */
     public function message()
     {
-        // TODO we need to be able to mock public properties (to mock the WebSocket decorator)
     }
 
     /**
@@ -160,39 +160,39 @@ class SocketServerTest extends TestCase
      * The server should automatically pick the correct protocol and transform the response accordingly.
      *
      * @test
+     * @todo Implement this test
      */
     public function messageMultipleProtocols()
     {
-        // TODO we need to be able to mock public properties (to mock the WebSocket decorator)
     }
 
     /**
      * Check if we can register middleware on the server.
      *
      * @test
+     * @todo Implement this test
      */
     public function registerMiddleware()
     {
-        // TODO we need to be able to mock public properties (to mock the WebSocket decorator)
     }
 
     /**
      * Test if we can respond early from middleware.
      *
      * @test
+     * @todo Implement this test
      */
     public function messageFromMiddleware()
     {
-        // TODO we need to be able to mock public properties (to mock the WebSocket decorator)
     }
 
     /**
      * Test if we can let a message pass through a middleware but not respond from it.
      *
      * @test
+     * @todo Implement this test
      */
     public function messageThroughMiddleware()
     {
-        // TODO we need to be able to mock public properties (to mock the WebSocket decorator)
     }
 }
