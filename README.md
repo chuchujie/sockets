@@ -49,3 +49,4 @@
 - [ ] extend request to expose origin (IP)
 - [ ] Protocol should validate contents (Experus throws unknown property when not passing in the required properties)
 - [ ] if no protocol is registered (or found) -> exception message should be clearer (gives ReflectionException(-1) now)
+- [ ] move replace socket provider from setup command to create provider command
