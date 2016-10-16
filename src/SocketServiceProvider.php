@@ -9,6 +9,7 @@ use Experus\Sockets\Commands\GenerateHandlerCommand;
 use Experus\Sockets\Commands\GenerateMiddlewareCommand;
 use Experus\Sockets\Commands\GenerateProtocolCommand;
 use Experus\Sockets\Commands\GenerateProviderCommand;
+use Experus\Sockets\Commands\GenerateStackCommand;
 use Experus\Sockets\Commands\ServeCommand;
 use Experus\Sockets\Commands\SetupSocketsCommand;
 use Experus\Sockets\Contracts\Exceptions\Handler;
@@ -90,6 +91,7 @@ class SocketServiceProvider extends ServiceProvider
             GenerateCatcherCommand::class,
             GenerateProtocolCommand::class,
             SetupSocketsCommand::class,
+            GenerateStackCommand::class,
         ]);
 
         $this->registerProtocols();
