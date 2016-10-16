@@ -5,6 +5,8 @@
 use Experus\Sockets\Contracts\Middlewares\Stack;
 use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Core\Server\SocketServer;
+use Experus\Sockets\Core\Session\SocketSessionFactory;
+use Guzzle\Http\Message\RequestInterface;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Mockery as m;
@@ -38,6 +40,20 @@ class SocketServerTest extends TestCase
     protected $server;
 
     /**
+     * The connection we're testing with.
+     *
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * The session factory we're testing with.
+     *
+     * @var SocketSessionFactory
+     */
+    protected $session;
+
+    /**
      * Set up the testing environment.
      */
     public function setUp()
@@ -45,6 +61,15 @@ class SocketServerTest extends TestCase
         $this->events = m::mock('events')->shouldReceive('fire')->andReturnNull();
         $this->app = m::mock(Application::class)->shouldReceive('make')->with(Stack::class)->andReturn()->mock();
         $this->server = new SocketServer($this->app);
+
+        $this->connection = m::mock(Connection::class);
+        $websocket = new stdClass;
+        $websocket->request = m::mock(RequestInterface::class);
+        $this->setMagicProperty($this->connection, 'WebSocket', $websocket);
+
+        $this->session = m::mock(SocketSessionFactory::class)
+            ->shouldReceive('make')
+            ->mock();
     }
 
     /**
@@ -70,10 +95,15 @@ class SocketServerTest extends TestCase
     public function clientConnects()
     {
         $this->app->shouldReceive('make')
+            ->with(SocketSessionFactory::class)
+            ->andReturn($this->session)
+            ->once();
+
+        $this->app->shouldReceive('make')
             ->with('events')
             ->andReturn($this->events->once()->mock());
 
-        $this->server->onOpen(m::mock(Connection::class));
+        $this->server->onOpen($this->connection);
     }
 
     /**
@@ -84,7 +114,9 @@ class SocketServerTest extends TestCase
     public function clientAcceptsOnlyRFC6455()
     {
         $this->app->shouldReceive('make')
-            ->never();
+            ->with(SocketSessionFactory::class)
+            ->andReturn($this->session)
+            ->once();
 
         $this->expectException(UnexpectedValueException::class);
 
@@ -98,16 +130,19 @@ class SocketServerTest extends TestCase
      */
     public function clientClosesConnection()
     {
-        $connection = m::mock(Connection::class);
-        $connection->shouldReceive('write')->andThrow(RuntimeException::class);
+        $this->connection->shouldReceive('write')->andThrow(RuntimeException::class);
 
+        $this->app->shouldReceive('make')
+            ->with(SocketSessionFactory::class)
+            ->andReturn($this->session)
+            ->once();
         $this->app->shouldReceive('make')
             ->with('events')
             ->andReturn($this->events->twice()->mock());
 
-        $this->server->onOpen($connection);
+        $this->server->onOpen($this->connection);
 
-        $this->server->onClose($connection);
+        $this->server->onClose($this->connection);
     }
 
     /**

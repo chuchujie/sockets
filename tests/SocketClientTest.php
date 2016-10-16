@@ -3,6 +3,7 @@
 // Created by dealloc. All rights reserved.
 
 use Experus\Sockets\Core\Client\SocketClient;
+use Experus\Sockets\Core\Session\SocketSessionFactory;
 use Guzzle\Http\Message\RequestInterface;
 use Mockery as m;
 use Ratchet\WebSocket\Version\RFC6455\Connection;
@@ -18,6 +19,13 @@ class SocketClientTest extends TestCase
      * @var Connection|\Mockery\MockInterface
      */
     protected $socket;
+
+    /**
+     * The session factory we're testing with.
+     *
+     * @var SocketSessionFactory
+     */
+    protected $session;
 
     /**
      * The mocked internal request we're testing with.
@@ -37,6 +45,11 @@ class SocketClientTest extends TestCase
         $this->request = m::mock(RequestInterface::class);
         $websocket->request = $this->request;
         $this->setMagicProperty($this->socket, 'WebSocket', $websocket);
+
+        $this->session = m::mock(SocketSessionFactory::class)
+            ->shouldReceive('make')
+            ->once()
+            ->mock();
     }
 
     /**
@@ -52,7 +65,7 @@ class SocketClientTest extends TestCase
             ->andReturnUndefined()
             ->once();
 
-        $client = new SocketClient($this->socket);
+        $client = new SocketClient($this->socket, $this->session);
 
         $client->write('hello world');
     }
@@ -70,7 +83,7 @@ class SocketClientTest extends TestCase
             ->andReturnUndefined()
             ->once();
 
-        $client = new SocketClient($this->socket);
+        $client = new SocketClient($this->socket, $this->session);
 
         $client->close();
     }
@@ -82,7 +95,7 @@ class SocketClientTest extends TestCase
      */
     public function retrievesUUID()
     {
-        $client = new SocketClient($this->socket);
+        $client = new SocketClient($this->socket, $this->session);
 
         $this->request->shouldReceive('hasHeader')
             ->with(SocketClient::UUID_HEADER)
@@ -104,7 +117,7 @@ class SocketClientTest extends TestCase
      */
     public function equals()
     {
-        $client = new SocketClient($this->socket);
+        $client = new SocketClient($this->socket, $this->session);
 
         assert($client->equals($this->socket), 'Same connection should be equal');
     }
@@ -116,7 +129,7 @@ class SocketClientTest extends TestCase
      */
     public function equalsDifferentConnections()
     {
-        $client = new SocketClient($this->socket);
+        $client = new SocketClient($this->socket, $this->session);
         $different = m::mock('\Ratchet\WebSocket\Version\RFC6455\Connection');
 
         assert($client->equals($different), 'Different connections should not be considered equal.');
@@ -137,7 +150,7 @@ class SocketClientTest extends TestCase
 
         $this->setMagicProperty($this->socket, 'WebSocket', $websocket);
 
-        $client = new SocketClient($this->socket);
+        $client = new SocketClient($this->socket, $this->session);
 
         self::assertEquals($client->protocol(), SocketClient::DEFAULT_PROTOCOL);
     }
@@ -157,7 +170,7 @@ class SocketClientTest extends TestCase
             ->andReturn('FOO')
             ->once();
 
-        $client = new SocketClient($this->socket);
+        $client = new SocketClient($this->socket, $this->session);
 
         self::assertEquals($client->protocol(), 'FOO');
     }
