@@ -13,7 +13,25 @@ use UnexpectedValueException;
  */
 class SocketClient
 {
+    /**
+     * The header to retrieve the UUID from the Websocket from.
+     *
+     * @var string
+     */
+    const UUID_HEADER = 'Sec-WebSocket-Key';
+
+    /**
+     * The header to retrieve the Websocket protocol used.
+     *
+     * @var string
+     */
     const PROTOCOL_HEADER = 'Sec-WebSocket-Protocol';
+
+    /**
+     * The default protocol to use if none was specified.
+     *
+     * @var string
+     */
     const DEFAULT_PROTOCOL = 'experus';
 
     /**
@@ -22,13 +40,6 @@ class SocketClient
      * @var Connection
      */
     private $socket;
-
-    /**
-     * The UUID of this client.
-     *
-     * @var string
-     */
-    private $uuid;
 
     /**
      * SocketClient constructor.
@@ -41,7 +52,6 @@ class SocketClient
         }
 
         $this->socket = $socket;
-        $this->uuid = uniqid('socket-', true);
     }
 
     /**
@@ -69,7 +79,7 @@ class SocketClient
      */
     public function getUuid()
     {
-        return $this->uuid;
+        return $this->header(self::UUID_HEADER);
     }
 
     /**
@@ -97,5 +107,22 @@ class SocketClient
         }
 
         return self::DEFAULT_PROTOCOL;
+    }
+
+    /**
+     * Get the header from the request associated with this client.
+     *
+     * @param string $name The name of the header.
+     * @return null|string returns the value of the header or null if the header does not exist.
+     */
+    public function header($name)
+    {
+        $request = &$this->socket->WebSocket->request; // raw HTTP request used.
+
+        if ($request->hasHeader($name)) {
+            return (string)$request->getHeader($name);
+        }
+
+        return null;
     }
 }
