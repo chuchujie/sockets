@@ -4,6 +4,7 @@
 namespace Experus\Sockets\Core\Routing;
 
 use Experus\Sockets\Core\Middlewares\MiddlewareDispatcher;
+use Experus\Sockets\Core\Middlewares\Pipeline;
 use Experus\Sockets\Core\Server\SocketRequest;
 use Experus\Sockets\Exceptions\InvalidActionException;
 use Illuminate\Contracts\Foundation\Application;
@@ -18,8 +19,6 @@ use RuntimeException;
  */
 class SocketRoute
 {
-    use MiddlewareDispatcher;
-
     /**
      * The key the route will use to search for the name property.
      *
@@ -77,6 +76,13 @@ class SocketRoute
     private $app;
 
     /**
+     * The middleware pipeline.
+     *
+     * @var Pipeline
+     */
+    private $pipeline;
+
+    /**
      * SocketRoute constructor.
      * @param string $path
      * @param array $action
@@ -88,6 +94,7 @@ class SocketRoute
     {
         $this->app = $app;
         $this->path = $path;
+        $this->pipeline = new Pipeline();
         $this->attributes = array_merge($attributes, $action, compact('channel'));
     }
 
@@ -111,7 +118,7 @@ class SocketRoute
     public function run(SocketRequest $request)
     {
         if (!empty($this->middlewares())) {
-            $response = $this->runThrough($this->middlewares(), $request);
+            $response = $this->pipeline->through($this->middlewares())->run($request);
 
             if (!is_null($response)) {
                 return $response;

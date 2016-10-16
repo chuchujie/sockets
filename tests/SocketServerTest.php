@@ -2,6 +2,7 @@
 
 // Created by dealloc. All rights reserved.
 
+use Experus\Sockets\Contracts\Middlewares\Stack;
 use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Core\Server\SocketServer;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -42,7 +43,7 @@ class SocketServerTest extends TestCase
     public function setUp()
     {
         $this->events = m::mock('events')->shouldReceive('fire')->andReturnNull();
-        $this->app = m::mock(Application::class);
+        $this->app = m::mock(Application::class)->shouldReceive('make')->with(Stack::class)->andReturn()->mock();
         $this->server = new SocketServer($this->app);
     }
 

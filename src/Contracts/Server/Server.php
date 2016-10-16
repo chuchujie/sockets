@@ -13,13 +13,6 @@ use Ratchet\WebSocket\WsServerInterface;
 interface Server extends MessageComponentInterface, WsServerInterface
 {
     /**
-     * Register a global middleware in the server.
-     *
-     * @param string $middleware
-     */
-    public function registerMiddleware($middleware);
-
-    /**
      * Register a new protocol.
      *
      * @param string $name The name of the protocol.

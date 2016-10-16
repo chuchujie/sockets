@@ -9,13 +9,16 @@ use Experus\Sockets\Commands\GenerateHandlerCommand;
 use Experus\Sockets\Commands\GenerateMiddlewareCommand;
 use Experus\Sockets\Commands\GenerateProtocolCommand;
 use Experus\Sockets\Commands\GenerateProviderCommand;
+use Experus\Sockets\Commands\GenerateStackCommand;
 use Experus\Sockets\Commands\ServeCommand;
 use Experus\Sockets\Commands\SetupSocketsCommand;
 use Experus\Sockets\Contracts\Exceptions\Handler;
+use Experus\Sockets\Contracts\Middlewares\Stack;
 use Experus\Sockets\Contracts\Routing\Router;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Core\Exceptions\DebugHandler;
+use Experus\Sockets\Core\Middlewares\SocketMiddlewareStack;
 use Experus\Sockets\Core\Protocols\ExperusProtocol;
 use Experus\Sockets\Core\Routing\SocketRouter;
 use Experus\Sockets\Core\Server\SocketServer;
@@ -36,13 +39,6 @@ class SocketServiceProvider extends ServiceProvider
     public $defer = true;
 
     /**
-     * The global middleware stack.
-     *
-     * @var array
-     */
-    protected $middlewares = [];
-
-    /**
      * The supplied protocol stack.
      *
      * @var array
@@ -57,6 +53,13 @@ class SocketServiceProvider extends ServiceProvider
      * @var Handler
      */
     protected $handler = DebugHandler::class;
+
+    /**
+     * The global middleware stack for the sockets runtime.
+     *
+     * @var Stack
+     */
+    protected $stack = SocketMiddlewareStack::class;
 
     /**
      * The bindings this service provider provides.
@@ -76,6 +79,8 @@ class SocketServiceProvider extends ServiceProvider
         foreach ($this->bindings as $contract => $binding) {
             $this->app->singleton($contract, $binding);
         }
+        $this->app->singleton(Handler::class, $this->handler);
+        $this->app->singleton(Stack::class, $this->stack);
 
         $this->commands([
             ServeCommand::class,
@@ -86,15 +91,15 @@ class SocketServiceProvider extends ServiceProvider
             GenerateCatcherCommand::class,
             GenerateProtocolCommand::class,
             SetupSocketsCommand::class,
+            GenerateStackCommand::class,
         ]);
 
-        $this->registerMiddleware();
         $this->registerProtocols();
-        $this->app->singleton(Handler::class, $this->handler);
     }
 
     /**
      * Expose the configuration exports.
+     * @todo remove base_path calls to remove hard dependency on Laravel framework.
      */
     public function boot()
     {
@@ -115,26 +120,12 @@ class SocketServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register all middlewares.
-     */
-    private function registerMiddleware()
-    {
-        if (!empty($this->middlewares)) {
-            $server = $this->app->make(Server::class);
-            foreach ($this->middlewares as $middleware) {
-                $server->registerMiddleware($middleware);
-            }
-        }
-    }
-
-    /**
      * Register all protocols.
      */
     private function registerProtocols()
     {
-        $server = $this->app->make(Server::class);
-
         if (!empty($this->protocols)) {
+            $server = $this->app->make(Server::class);
             foreach ($this->protocols as $name => $protocol) {
                 $server->registerProtocol($name, $protocol);
             }
