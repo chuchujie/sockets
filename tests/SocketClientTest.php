@@ -25,6 +25,13 @@ class SocketClientTest extends TestCase
      *
      * @var SocketSessionFactory
      */
+    protected $sessionFactory;
+
+    /**
+     * The generated session we're testing with.
+     *
+     * @var \Illuminate\Session\SessionManager|m\MockInterface
+     */
     protected $session;
 
     /**
@@ -46,8 +53,10 @@ class SocketClientTest extends TestCase
         $websocket->request = $this->request;
         $this->setMagicProperty($this->socket, 'WebSocket', $websocket);
 
-        $this->session = m::mock(SocketSessionFactory::class)
+        $this->session = m::mock(\Illuminate\Session\SessionManager::class);
+        $this->sessionFactory = m::mock(SocketSessionFactory::class)
             ->shouldReceive('make')
+            ->andReturn($this->session) // should be replaced with a mock of the session manager
             ->once()
             ->mock();
     }
@@ -65,7 +74,7 @@ class SocketClientTest extends TestCase
             ->andReturnUndefined()
             ->once();
 
-        $client = new SocketClient($this->socket, $this->session);
+        $client = new SocketClient($this->socket, $this->sessionFactory);
 
         $client->write('hello world');
     }
@@ -83,7 +92,7 @@ class SocketClientTest extends TestCase
             ->andReturnUndefined()
             ->once();
 
-        $client = new SocketClient($this->socket, $this->session);
+        $client = new SocketClient($this->socket, $this->sessionFactory);
 
         $client->close();
     }
@@ -95,7 +104,7 @@ class SocketClientTest extends TestCase
      */
     public function retrievesUUID()
     {
-        $client = new SocketClient($this->socket, $this->session);
+        $client = new SocketClient($this->socket, $this->sessionFactory);
 
         $this->request->shouldReceive('hasHeader')
             ->with(SocketClient::UUID_HEADER)
@@ -117,7 +126,7 @@ class SocketClientTest extends TestCase
      */
     public function equals()
     {
-        $client = new SocketClient($this->socket, $this->session);
+        $client = new SocketClient($this->socket, $this->sessionFactory);
 
         assert($client->equals($this->socket), 'Same connection should be equal');
     }
@@ -129,7 +138,7 @@ class SocketClientTest extends TestCase
      */
     public function equalsDifferentConnections()
     {
-        $client = new SocketClient($this->socket, $this->session);
+        $client = new SocketClient($this->socket, $this->sessionFactory);
         $different = m::mock('\Ratchet\WebSocket\Version\RFC6455\Connection');
 
         assert($client->equals($different), 'Different connections should not be considered equal.');
@@ -150,7 +159,7 @@ class SocketClientTest extends TestCase
 
         $this->setMagicProperty($this->socket, 'WebSocket', $websocket);
 
-        $client = new SocketClient($this->socket, $this->session);
+        $client = new SocketClient($this->socket, $this->sessionFactory);
 
         self::assertEquals($client->protocol(), SocketClient::DEFAULT_PROTOCOL);
     }
@@ -170,40 +179,78 @@ class SocketClientTest extends TestCase
             ->andReturn('FOO')
             ->once();
 
-        $client = new SocketClient($this->socket, $this->session);
+        $client = new SocketClient($this->socket, $this->sessionFactory);
 
         self::assertEquals($client->protocol(), 'FOO');
     }
 
     /**
+     * Test if we can receive a header from the connection.
+     *
      * @test
-     * @todo Implement this test
      */
     public function retrieveHeader()
     {
+        $this->request->shouldReceive('hasHeader')
+            ->with('FOOBAR')
+            ->andReturn(true)
+            ->once();
+        $this->request->shouldReceive('getHeader')
+            ->with('FOOBAR')
+            ->andReturn('FOO')
+            ->once();
+
+        $client = new SocketClient($this->socket, $this->sessionFactory);
+
+        self::assertEquals($client->header('FOOBAR'), 'FOO');
     }
 
     /**
+     * Test if we can receive a header that does not exist
+     *
      * @test
-     * @todo Implement this test
      */
     public function retrieveHeaderDoesNotExist()
     {
+        $this->request->shouldReceive('hasHeader')
+            ->with('FOOBAR')
+            ->andReturn(false)
+            ->once();
+        $this->request->shouldReceive('getHeader')
+            ->with('FOOBAR')
+            ->never();
+
+        $client = new SocketClient($this->socket, $this->sessionFactory);
+
+        self::assertNull($client->header('FOOBAR'));
     }
 
     /**
+     * Test if we can receive the session manager from the client.
+     *
      * @test
-     * @todo Implement this test
      */
     public function retrieveSessionManager()
     {
+        $client = new SocketClient($this->socket, $this->sessionFactory);
+
+        self::assertEquals($this->session, $client->session());
     }
 
     /**
+     * Test if we can receive a session variable from the client.
+     *
      * @test
-     * @todo Implement this test
      */
     public function retrieveSessionVariable()
     {
+        $this->session->shouldReceive('get')
+            ->with('foo')
+            ->andReturn('bar')
+            ->once();
+
+        $client = new SocketClient($this->socket, $this->sessionFactory);
+
+        self::assertEquals('bar', $client->session('foo'));
     }
 }
