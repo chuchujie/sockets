@@ -20,6 +20,7 @@
 - [Customisation](docs/provider.md)
 - [Protocols](docs/protocols.md)
 - [Middleware](docs/middleware.md)
+- [Broadcasting](docs/broadcasting.md)
 - [Events](docs/events.md)
 - [Exceptions](docs/exceptions.md)
 - [Whitelisting and blacklisting](docs/listing.md)
