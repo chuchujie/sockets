@@ -29,20 +29,12 @@
 
 ### Roadmap
 
-- [x] write unit tests
-- [x] provide in depth documentation for each subject
 - [ ] implement channels
 - [ ] allow creating topics or something
 - [ ] prefix property on routes
-- [x] command that sets up everything (vendor:publish, generate provider, middleware, controller, handler and protocols)
 - [ ] maybe write a client side library for sockets?
 - [ ] protocols need to specify how to extract payload
-- [x] generalize json() method on request to parse (ex: for xml)
 - [ ] finish experus protocol
-- [x] named middlewares
-- [x] generate protocols
-- [x] fire event on startup of server
-- [x] fire event on shutdown of server
 - [ ] add session support
 - [ ] extend request to expose "user" if applicable (from session)
 - [ ] extend request to expose session
