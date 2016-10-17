@@ -213,7 +213,8 @@ class SocketServer implements Server, Broadcaster
         }
 
         $protocol = array_first($this->protocols, function ($_, $protocol) use ($client) {
-            return $protocol == $client->header(SocketClient::PROTOCOL_HEADER);
+            $header = $client->header(SocketClient::PROTOCOL_HEADER);
+            return $protocol == (is_null($header) ? SocketClient::DEFAULT_PROTOCOL : $header);
         });
 
         if (is_null($protocol)) {
