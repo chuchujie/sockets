@@ -99,6 +99,10 @@ class SocketServer implements Server, Broadcaster
     {
         $client = $this->find($conn);
 
+        if (is_null($client)) { // client closed by error handling due exception in initialization.
+            return;
+        }
+
         $this->app->make('events')->fire(new SocketDisconnectedEvent($client));
 
         $index = array_search($client, $this->clients);
@@ -115,6 +119,11 @@ class SocketServer implements Server, Broadcaster
     public function onError(ConnectionInterface $connection, Exception $exception)
     {
         $client = $this->find($connection);
+
+        if (is_null($client)) { // client has thrown exception *while* connecting
+            return $connection->close();
+        }
+
         $handler = $this->app->make(Handler::class);
         $response = $handler->handle($client, $exception);
 
