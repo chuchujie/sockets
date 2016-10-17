@@ -86,11 +86,10 @@ class SocketRoute
      * SocketRoute constructor.
      * @param string $path
      * @param array $action
-     * @param string $channel
      * @param array $attributes
      * @param Application $app
      */
-    public function __construct($path, array $action, $channel = '', $attributes = [], Application $app)
+    public function __construct($path, array $action, $attributes = [], Application $app)
     {
         $this->app = $app;
         $this->path = $path;

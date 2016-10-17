@@ -24,13 +24,6 @@ class SocketRouter implements Router
     private $routes = [];
 
     /**
-     * The currently active channel
-     *
-     * @var string
-     */
-    private $channel = '';
-
-    /**
      * The currently active properties.
      *
      * @var array
@@ -64,7 +57,7 @@ class SocketRouter implements Router
     {
         $action = (is_array($action) ? $action : $action = [SocketRoute::ACTION => $action]);
 
-        $this->routes[] = new SocketRoute($uri, $action, $this->channel, $this->properties, $this->app);
+        $this->routes[] = new SocketRoute($uri, $action, $this->properties, $this->app);
 
         return $this;
     }
@@ -85,24 +78,6 @@ class SocketRouter implements Router
         $callback($this);
 
         $this->properties = $original;
-
-        return $this;
-    }
-
-    /**
-     * Group a set of routes in the same channel.
-     *
-     * @param array|string $attributes The attributes of this channel.
-     * @param Closure $callback
-     * @return Router
-     */
-    public function channel($attributes, Closure $callback)
-    {
-        $this->channel = (is_array($attributes) ? $attributes['name'] : $attributes);
-
-        $callback($this);
-
-        $this->channel = ''; // TODO shit...
 
         return $this;
     }

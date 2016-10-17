@@ -31,15 +31,6 @@ interface Router
     public function group(array $attributes, Closure $callback);
 
     /**
-     * Group a set of routes in the same channel.
-     *
-     * @param array|string $attributes The attributes of this channel.
-     * @param Closure $callback
-     * @return Router
-     */
-    public function channel($attributes, Closure $callback);
-
-    /**
      * Dispatch a route to the according handlers.
      *
      * @param SocketRequest $request

@@ -182,16 +182,6 @@ class SocketRouterTest extends TestCase
     }
 
     /**
-     * Test if we can register a route on a channel.
-     *
-     * @test
-     * @todo implement when done with implementing channels
-     */
-    public function channel()
-    {
-    }
-
-    /**
      * Test if a group shares the namespace to it's sub routes.
      *
      * @test
