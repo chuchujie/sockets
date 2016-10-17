@@ -151,4 +151,14 @@ class SocketClient
 
         return $this->session->get($key);
     }
+
+    /**
+     * Get the hostname that initiated the request.
+     *
+     * @return string
+     */
+    public function host()
+    {
+        return $this->socket->WebSocket->request->getHost();
+    }
 }

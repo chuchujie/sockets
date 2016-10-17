@@ -5,6 +5,7 @@ namespace Experus\Sockets\Core\Server;
 
 use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Core\Client\SocketClient;
+use Illuminate\Session\SessionManager;
 
 /**
  * Class SocketRequest provides access to the request a socket send to the server.
@@ -104,5 +105,37 @@ class SocketRequest
     public function raw()
     {
         return $this->message;
+    }
+
+    /**
+     * Get the session for this request or retrieve a value from the session.
+     *
+     * @param string|null $key (optional) the key to retrieve from the session.
+     * @return SessionManager|mixed
+     */
+    public function session($key = null)
+    {
+        return $this->connection->session($key);
+    }
+
+    /**
+     * Get the header from the request.
+     *
+     * @param string $name The name of the header.
+     * @return null|string returns the value of the header or null if the header does not exist.
+     */
+    public function header($name)
+    {
+        return $this->connection->header($name);
+    }
+
+    /**
+     * Get the hostname that initiated the request.
+     *
+     * @return string
+     */
+    public function host()
+    {
+        return $this->connection->host();
     }
 }

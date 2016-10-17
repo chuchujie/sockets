@@ -37,7 +37,7 @@
 - [ ] finish experus protocol
 - [x] add session support
 - [ ] extend request to expose "user" if applicable (from session)
-- [ ] extend request to expose session
+- [x] extend request to expose session
 - [ ] extend request to expose origin (IP)
 - [ ] Protocol should validate contents (Experus throws unknown property when not passing in the required properties)
 - [x] if no protocol is registered (or found) -> exception message should be clearer (gives ReflectionException(-1) now)

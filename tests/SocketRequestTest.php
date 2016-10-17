@@ -67,7 +67,6 @@ class SocketRequestTest extends TestCase
      */
     public function setUp()
     {
-        $this->client = null;
         $this->client = m::mock(SocketClient::class);
         $this->protocol = m::mock(Protocol::class);
     }
@@ -243,5 +242,39 @@ class SocketRequestTest extends TestCase
         $this->createRequestEmptyBody();
 
         self::assertEquals($this->request->client(), $this->client);
+    }
+
+    /**
+     * Test if we can receive the session manager.
+     *
+     * @test
+     */
+    public function retrieveSessionManager()
+    {
+        $this->createRequestEmptyBody();
+
+        $this->client->shouldReceive('session')
+            ->with(null)
+            ->andReturn('SESSIONMANAGER')
+            ->once();
+
+        self::assertEquals($this->request->session(), 'SESSIONMANAGER');
+    }
+
+    /**
+     * Test if we can retrieve a session variable.
+     *
+     * @test
+     */
+    public function retrieveSessionVariable()
+    {
+        $this->createRequestEmptyBody();
+
+        $this->client->shouldReceive('session')
+            ->with('foo')
+            ->andReturn('bar')
+            ->once();
+
+        self::assertEquals($this->request->session('foo'), 'bar');
     }
 }
