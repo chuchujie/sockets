@@ -82,6 +82,8 @@ class SocketServer implements Server, Broadcaster
     {
         $session = $this->app->make(SocketSessionFactory::class); // the session for this connection
         $client = new SocketClient($conn, $session);
+        $protocol = $this->protocol($client);
+        $client->setProtocol($protocol);
 
         $this->clients[] = $client;
 
@@ -141,8 +143,7 @@ class SocketServer implements Server, Broadcaster
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $client = $this->find($from);
-        $protocol = $this->protocol($client);
-        $request = new SocketRequest($client, $msg, $protocol);
+        $request = new SocketRequest($client, $msg);
         $response = null;
 
         if (!empty($this->middlewares)) {
@@ -152,7 +153,7 @@ class SocketServer implements Server, Broadcaster
         $response = is_null($response) ? $this->app->make(Router::class)->dispatch($request) : $response;
 
         if (!is_null($response)) {
-            $client->write($protocol->serialize($response));
+            $client->write($response);
         }
     }
 
@@ -203,7 +204,7 @@ class SocketServer implements Server, Broadcaster
         }
 
         $protocol = array_first($this->protocols, function ($_, $protocol) use ($client) {
-            return $protocol == $client->protocol();
+            return $protocol == $client->header(SocketClient::PROTOCOL_HEADER);
         });
 
         if (is_null($protocol)) {

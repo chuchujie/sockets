@@ -3,6 +3,7 @@
 
 namespace Experus\Sockets\Core\Client;
 
+use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Core\Session\SocketSessionFactory;
 use Illuminate\Session\SessionManager;
 use Ratchet\ConnectionInterface as Socket;
@@ -51,6 +52,13 @@ class SocketClient
     private $session;
 
     /**
+     * The protocol used by this client.
+     *
+     * @var Protocol
+     */
+    private $protocol;
+
+    /**
      * SocketClient constructor.
      * @param Socket $socket the raw Ratchet socket to wrap.
      * @param SocketSessionFactory $session
@@ -72,7 +80,7 @@ class SocketClient
      */
     public function write($data)
     {
-        $this->socket->send($data);
+        $this->socket->send($this->protocol->serialize($data));
     }
 
     /**
@@ -105,19 +113,23 @@ class SocketClient
     }
 
     /**
+     * Set the protocol for this client.
+     *
+     * @param Protocol $protocol
+     */
+    public function setProtocol($protocol)
+    {
+        $this->protocol = $protocol;
+    }
+
+    /**
      * Get the protocol used for this socket.
      *
-     * @return string
+     * @return Protocol
      */
     public function protocol()
     {
-        $request = &$this->socket->WebSocket->request; // raw HTTP request used.
-
-        if ($request->hasHeader(self::PROTOCOL_HEADER)) {
-            return (string)$request->getHeader(self::PROTOCOL_HEADER);
-        }
-
-        return self::DEFAULT_PROTOCOL;
+        return $this->protocol;
     }
 
     /**
