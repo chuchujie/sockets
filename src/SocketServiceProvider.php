@@ -15,6 +15,7 @@ use Experus\Sockets\Commands\SetupSocketsCommand;
 use Experus\Sockets\Contracts\Exceptions\Handler;
 use Experus\Sockets\Contracts\Middlewares\Stack;
 use Experus\Sockets\Contracts\Routing\Router;
+use Experus\Sockets\Contracts\Server\Broadcaster;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Core\Exceptions\DebugHandler;
@@ -81,6 +82,7 @@ class SocketServiceProvider extends ServiceProvider
         }
         $this->app->singleton(Handler::class, $this->handler);
         $this->app->singleton(Stack::class, $this->stack);
+        $this->app->instance(Broadcaster::class, $this->app->make(Server::class));
 
         $this->commands([
             ServeCommand::class,
