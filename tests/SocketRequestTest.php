@@ -78,7 +78,7 @@ class SocketRequestTest extends TestCase
      */
     public function createRequestEmptyBody()
     {
-        $this->request = new SocketRequest($this->client, '', $this->protocol);
+        $this->request = new SocketRequest($this->client, '');
     }
 
     /**
@@ -88,7 +88,7 @@ class SocketRequestTest extends TestCase
      */
     public function createRequestNullBody()
     {
-        $this->request = new SocketRequest($this->client, null, $this->protocol);
+        $this->request = new SocketRequest($this->client, null);
     }
 
     /**
@@ -98,7 +98,7 @@ class SocketRequestTest extends TestCase
      */
     public function createRequestJsonBody()
     {
-        $this->request = new SocketRequest($this->client, self::JSON_BODY, $this->protocol);
+        $this->request = new SocketRequest($this->client, self::JSON_BODY);
     }
 
     /**
@@ -108,7 +108,7 @@ class SocketRequestTest extends TestCase
      */
     public function createRequestMalformedJsonBody()
     {
-        $this->request = new SocketRequest($this->client, self::MALFORMED_JSON_BODY, $this->protocol);
+        $this->request = new SocketRequest($this->client, self::MALFORMED_JSON_BODY);
     }
 
     /**
@@ -118,7 +118,7 @@ class SocketRequestTest extends TestCase
      */
     public function createRequestXmlBody()
     {
-        $this->request = new SocketRequest($this->client, self::XML_BODY, $this->protocol);
+        $this->request = new SocketRequest($this->client, self::XML_BODY);
     }
 
     /**
@@ -128,7 +128,7 @@ class SocketRequestTest extends TestCase
      */
     public function createRequestMalformedXmlBody()
     {
-        $this->request = new SocketRequest($this->client, self::MALFORMED_XML_BODY, $this->protocol);
+        $this->request = new SocketRequest($this->client, self::MALFORMED_XML_BODY);
     }
 
     /**
@@ -139,6 +139,10 @@ class SocketRequestTest extends TestCase
     public function parseJsonBody()
     {
         $this->createRequestJsonBody();
+
+        $this->client->shouldReceive('protocol')
+            ->andReturn($this->protocol)
+            ->once();
 
         $this->protocol->shouldReceive('parse')
             ->with($this->request)
@@ -156,6 +160,10 @@ class SocketRequestTest extends TestCase
     public function paseMalformedJsonBody()
     {
         $this->createRequestMalformedJsonBody();
+
+        $this->client->shouldReceive('protocol')
+            ->andReturn($this->protocol)
+            ->once();
 
         $this->protocol->shouldReceive('parse')
             ->with($this->request)
@@ -175,6 +183,10 @@ class SocketRequestTest extends TestCase
     {
         $this->createRequestXmlBody();
 
+        $this->client->shouldReceive('protocol')
+            ->andReturn($this->protocol)
+            ->twice();
+
         $this->protocol->shouldReceive('parse')
             ->with($this->request)
             ->andReturn(simplexml_load_string(self::XML_BODY));
@@ -193,6 +205,10 @@ class SocketRequestTest extends TestCase
     public function parseMalformedXmlBody()
     {
         $this->createRequestMalformedXmlBody();
+
+        $this->client->shouldReceive('protocol')
+            ->andReturn($this->protocol)
+            ->once();
 
         $this->protocol->shouldReceive('parse')
             ->with($this->request)
@@ -223,6 +239,10 @@ class SocketRequestTest extends TestCase
     public function retrieveBody()
     {
         $this->createRequestJsonBody();
+
+        $this->client->shouldReceive('protocol')
+            ->andReturn($this->protocol)
+            ->once();
 
         $this->protocol->shouldReceive('body')
             ->with($this->request)

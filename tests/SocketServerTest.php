@@ -54,6 +54,13 @@ class SocketServerTest extends TestCase
     protected $session;
 
     /**
+     * The request we're testing with.
+     *
+     * @var RequestInterface|m\MockInterface
+     */
+    protected $request;
+
+    /**
      * Set up the testing environment.
      */
     public function setUp()
@@ -64,7 +71,8 @@ class SocketServerTest extends TestCase
 
         $this->connection = m::mock(Connection::class);
         $websocket = new stdClass;
-        $websocket->request = m::mock(RequestInterface::class);
+        $this->request = m::mock(RequestInterface::class);
+        $websocket->request = $this->request;
         $this->setMagicProperty($this->connection, 'WebSocket', $websocket);
 
         $this->session = m::mock(SocketSessionFactory::class)
@@ -103,6 +111,31 @@ class SocketServerTest extends TestCase
             ->with('events')
             ->andReturn($this->events->once()->mock());
 
+        $this->server->registerProtocol('protocol', Protocol::class);
+
+        $this->request->shouldReceive('hasHeader')
+            ->andReturn(true)
+            ->once();
+
+        $this->request->shouldReceive('getHeader')
+            ->andReturn('protocol')
+            ->once();
+
+        $this->app->shouldReceive('make')
+            ->with(Protocol::class)
+            ->andReturn($this->request)
+            ->once();
+
+        $this->server->onOpen($this->connection);
+    }
+
+    /**
+     * @test
+     */
+    public function clientConnectsNoProtocols()
+    {
+        $this->expectException(RuntimeException::class);
+
         $this->server->onOpen($this->connection);
     }
 
@@ -139,6 +172,21 @@ class SocketServerTest extends TestCase
         $this->app->shouldReceive('make')
             ->with('events')
             ->andReturn($this->events->twice()->mock());
+
+        $this->server->registerProtocol('protocol', Protocol::class);
+
+        $this->request->shouldReceive('hasHeader')
+            ->andReturn(true)
+            ->once();
+
+        $this->request->shouldReceive('getHeader')
+            ->andReturn('protocol')
+            ->once();
+
+        $this->app->shouldReceive('make')
+            ->with(Protocol::class)
+            ->andReturn($this->request)
+            ->once();
 
         $this->server->onOpen($this->connection);
 
