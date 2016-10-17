@@ -16,6 +16,16 @@ Let's break those arguments down:
 - **port** allows you to specify an alternative port (default 9999). example: `php artisan socket:serve --port=1234`
 - **local** allows you to run the server locally (by default available for everyone). example: `php artisan socket:serve --local`
 
+### Setup command
+
+Sockets provides a command that will help you setup your laravel environment for working with WebSockets in one go. The setup command will ask you what you want to setup, and will guide you through setting up your environment and structure.
+
+The syntax of the command looks like this:
+```sh
+php artisan socket:setup
+```
+That's it, no arguments needed.
+
 ### Generate controller command
 
 The controller command generates the boilerplate code for setting up controllers that handle incoming socket requests. It sets up directory structures for you and provides you with an empty controller class so you can hack away.

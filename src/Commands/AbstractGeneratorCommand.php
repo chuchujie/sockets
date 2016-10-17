@@ -61,10 +61,21 @@ abstract class AbstractGeneratorCommand extends Command
         }
 
         $template = file_get_contents(__DIR__ . '/../../files/templates/' . $this->template);
-        $template = $this->compile($template, compact('name', 'namespace'));
+        $template = $this->compile($template, $this->env(compact('name', 'namespace')));
 
         file_put_contents($output, $this->compile($template));
         $this->output->success('Generated ' . $namespace . '\\' . $name);
+    }
+
+    /**
+     * Build the environment variables for template parsing.
+     *
+     * @param array $defaults
+     * @return array
+     */
+    protected function env(array $defaults)
+    {
+        return $defaults;
     }
 
     /**
