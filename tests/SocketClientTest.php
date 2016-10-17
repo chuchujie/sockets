@@ -141,7 +141,7 @@ class SocketClientTest extends TestCase
         $client = new SocketClient($this->socket, $this->sessionFactory);
         $different = m::mock('\Ratchet\WebSocket\Version\RFC6455\Connection');
 
-        assert($client->equals($different), 'Different connections should not be considered equal.');
+        self::assertFalse($client->equals($different), 'Different connections should not be considered equal.');
     }
 
     /**
