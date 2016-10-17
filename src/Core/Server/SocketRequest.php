@@ -28,23 +28,14 @@ class SocketRequest
     private $message;
 
     /**
-     * The protocol used to parse the message.
-     *
-     * @var Protocol
-     */
-    private $protocol;
-
-    /**
      * SocketRequest constructor.
      * @param SocketClient $connection
      * @param $message
-     * @param Protocol $protocol
      */
-    public function __construct(SocketClient $connection, $message, Protocol $protocol)
+    public function __construct(SocketClient $connection, $message)
     {
         $this->connection = $connection;
         $this->message = $message;
-        $this->protocol = $protocol;
     }
 
     /**
@@ -60,7 +51,7 @@ class SocketRequest
     /**
      * Get the protocol used for this request.
      *
-     * @return string
+     * @return Protocol
      */
     public function protocol()
     {
@@ -74,7 +65,7 @@ class SocketRequest
      */
     public function parse()
     {
-        return $this->protocol->parse($this);
+        return $this->connection->protocol()->parse($this);
     }
 
     /**
@@ -84,7 +75,7 @@ class SocketRequest
      */
     public function body()
     {
-        return $this->protocol->body($this);
+        return $this->connection->protocol()->body($this);
     }
 
     /**
@@ -94,7 +85,7 @@ class SocketRequest
      */
     public function path()
     {
-        return $this->protocol->route($this);
+        return $this->connection->protocol()->route($this);
     }
 
     /**

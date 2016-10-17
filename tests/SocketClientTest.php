@@ -2,6 +2,7 @@
 
 // Created by dealloc. All rights reserved.
 
+use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Core\Session\SocketSessionFactory;
 use Guzzle\Http\Message\RequestInterface;
@@ -42,11 +43,19 @@ class SocketClientTest extends TestCase
     protected $request;
 
     /**
+     * The mocked protocol we're testing with.
+     *
+     * @var m\MockInterface|Protocol
+     */
+    private $protocol;
+
+    /**
      * Set up the testing environment.
      */
     public function setUp()
     {
         $this->socket = m::mock('\Ratchet\WebSocket\Version\RFC6455\Connection');
+        $this->protocol = m::mock(Protocol::class);
 
         $websocket = new stdClass;
         $this->request = m::mock(RequestInterface::class);
@@ -68,6 +77,11 @@ class SocketClientTest extends TestCase
      */
     public function writeStringToSocket()
     {
+        $this->protocol->shouldReceive('serialize')
+            ->with('hello world')
+            ->andReturn('hello world')
+            ->once();
+
         $this->socket
             ->shouldReceive('send')
             ->with('hello world')
@@ -75,6 +89,7 @@ class SocketClientTest extends TestCase
             ->once();
 
         $client = new SocketClient($this->socket, $this->sessionFactory);
+        $client->setProtocol($this->protocol);
 
         $client->write('hello world');
     }
@@ -152,16 +167,12 @@ class SocketClientTest extends TestCase
     {
         $websocket = new stdClass;
         $websocket->request = m::mock('\Guzzle\Http\Message\RequestInterface');
-        $websocket->request->shouldReceive('hasHeader')
-            ->with(SocketClient::PROTOCOL_HEADER)
-            ->andReturn(false)
-            ->once();
 
         $this->setMagicProperty($this->socket, 'WebSocket', $websocket);
 
         $client = new SocketClient($this->socket, $this->sessionFactory);
 
-        self::assertEquals($client->protocol(), SocketClient::DEFAULT_PROTOCOL);
+        self::assertEquals($client->protocol(), null);
     }
 
     /**
@@ -170,18 +181,10 @@ class SocketClientTest extends TestCase
      */
     public function withProtocol()
     {
-        $this->request->shouldReceive('hasHeader')
-            ->with(SocketClient::PROTOCOL_HEADER)
-            ->andReturn(true)
-            ->once();
-        $this->request->shouldReceive('getHeader')
-            ->with(SocketClient::PROTOCOL_HEADER)
-            ->andReturn('FOO')
-            ->once();
-
         $client = new SocketClient($this->socket, $this->sessionFactory);
+        $client->setProtocol($this->protocol);
 
-        self::assertEquals($client->protocol(), 'FOO');
+        self::assertEquals($client->protocol(), $this->protocol);
     }
 
     /**

@@ -3,11 +3,13 @@
 
 namespace Experus\Sockets\Core\Server;
 
+use Closure;
 use Exception;
 use Experus\Sockets\Contracts\Exceptions\Handler;
 use Experus\Sockets\Contracts\Middlewares\Stack;
 use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Contracts\Routing\Router;
+use Experus\Sockets\Contracts\Server\Broadcaster;
 use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Core\Client\SocketClient;
 use Experus\Sockets\Core\Middlewares\Pipeline;
@@ -23,7 +25,7 @@ use RuntimeException;
  * Class SocketServer is an implementation of the Ratchet MessageComponentInterface and provides the connection layer between Laravel and Ratchet.
  * @package Experus\Sockets\Core\Server
  */
-class SocketServer implements Server
+class SocketServer implements Server, Broadcaster
 {
     /**
      * The laravel application instance.
@@ -80,6 +82,8 @@ class SocketServer implements Server
     {
         $session = $this->app->make(SocketSessionFactory::class); // the session for this connection
         $client = new SocketClient($conn, $session);
+        $protocol = $this->protocol($client);
+        $client->setProtocol($protocol);
 
         $this->clients[] = $client;
 
@@ -139,8 +143,7 @@ class SocketServer implements Server
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $client = $this->find($from);
-        $protocol = $this->protocol($client);
-        $request = new SocketRequest($client, $msg, $protocol);
+        $request = new SocketRequest($client, $msg);
         $response = null;
 
         if (!empty($this->middlewares)) {
@@ -150,7 +153,7 @@ class SocketServer implements Server
         $response = is_null($response) ? $this->app->make(Router::class)->dispatch($request) : $response;
 
         if (!is_null($response)) {
-            $client->write($protocol->serialize($response));
+            $client->write($response);
         }
     }
 
@@ -192,6 +195,7 @@ class SocketServer implements Server
      *
      * @param SocketClient $client
      * @return Protocol
+     * @throws ProtocolNotFoundException
      */
     private function protocol(SocketClient $client)
     {
@@ -200,7 +204,7 @@ class SocketServer implements Server
         }
 
         $protocol = array_first($this->protocols, function ($_, $protocol) use ($client) {
-            return $protocol == $client->protocol();
+            return $protocol == $client->header(SocketClient::PROTOCOL_HEADER);
         });
 
         if (is_null($protocol)) {
@@ -208,5 +212,33 @@ class SocketServer implements Server
         }
 
         return $this->app->make($protocol);
+    }
+
+    /**
+     * Get all connected clients on the broadcaster.
+     *
+     * @param Closure|null $filter filter which clients should be returned.
+     * @return SocketClient[]
+     */
+    public function clients(Closure $filter = null)
+    {
+        if (is_null($filter)) {
+            return $this->clients;
+        }
+
+        return array_filter($this->clients, $filter);
+    }
+
+    /**
+     * Broadcast a message to all clients on the server.
+     *
+     * @param array|null|object $message
+     * @param Closure|null $filter (optional) filter which clients should receive the message.
+     */
+    public function broadcast($message, Closure $filter = null)
+    {
+        foreach ($this->clients($filter) as $client) {
+            $client->write($message);
+        }
     }
 }
