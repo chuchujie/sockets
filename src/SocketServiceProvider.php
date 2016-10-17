@@ -3,13 +3,13 @@
 
 namespace Experus\Sockets;
 
-use Experus\Sockets\Commands\GenerateCatcherCommand;
-use Experus\Sockets\Commands\GenerateControllerCommand;
-use Experus\Sockets\Commands\GenerateHandlerCommand;
-use Experus\Sockets\Commands\GenerateMiddlewareCommand;
-use Experus\Sockets\Commands\GenerateProtocolCommand;
-use Experus\Sockets\Commands\GenerateProviderCommand;
-use Experus\Sockets\Commands\GenerateStackCommand;
+use Experus\Sockets\Commands\Generators\GenerateCatcherCommand;
+use Experus\Sockets\Commands\Generators\GenerateControllerCommand;
+use Experus\Sockets\Commands\Generators\GenerateHandlerCommand;
+use Experus\Sockets\Commands\Generators\GenerateMiddlewareCommand;
+use Experus\Sockets\Commands\Generators\GenerateProtocolCommand;
+use Experus\Sockets\Commands\Generators\GenerateProviderCommand;
+use Experus\Sockets\Commands\Generators\GenerateStackCommand;
 use Experus\Sockets\Commands\ServeCommand;
 use Experus\Sockets\Commands\SetupSocketsCommand;
 use Experus\Sockets\Contracts\Exceptions\Handler;
