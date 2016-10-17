@@ -7,6 +7,7 @@ use Experus\Sockets\Contracts\Protocols\Protocol;
 use Experus\Sockets\Core\Server\SocketRequest;
 use Experus\Sockets\Exceptions\ParseException;
 use Experus\Sockets\Exceptions\SerializeException;
+use RuntimeException;
 
 /**
  * Class ExperusProtocol the default implementation of a protocol provided by sockets so you can play around with the framework.
@@ -42,6 +43,7 @@ class ExperusProtocol implements Protocol
      * @param SocketRequest $request
      * @return array|null|object
      * @throws ParseException thrown when parsing fails.
+     * @throws RuntimeException when validation of the payload fails.
      */
     public function parse(SocketRequest $request)
     {
@@ -51,7 +53,7 @@ class ExperusProtocol implements Protocol
             throw new ParseException($request->raw());
         }
 
-        return $result;
+        return $this->validate($result);
     }
 
     /**
@@ -70,5 +72,25 @@ class ExperusProtocol implements Protocol
         }
 
         return $serialized;
+    }
+
+    /**
+     * Validate the parsed payload to be valid for the current protocol.
+     *
+     * @param array|null|object $data
+     * @return array|null|object the data passed through.
+     * @throws RuntimeException thrown when the validation fails.
+     */
+    public function validate($data)
+    {
+        if (is_null($data) || is_array($data)) {
+            throw new RuntimeException('Payload is not an object, and thus invalid');
+        }
+
+        if (!isset($data->to) || !isset($data->to)) {
+            throw new RuntimeException('Payload is missing required properties.');
+        }
+
+        return $data;
     }
 }
