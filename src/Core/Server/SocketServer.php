@@ -14,8 +14,10 @@ use Experus\Sockets\Core\Middlewares\Pipeline;
 use Experus\Sockets\Core\Session\SocketSessionFactory;
 use Experus\Sockets\Events\SocketConnectedEvent;
 use Experus\Sockets\Events\SocketDisconnectedEvent;
+use Experus\Sockets\Exceptions\ProtocolNotFoundException;
 use Illuminate\Contracts\Foundation\Application;
 use Ratchet\ConnectionInterface;
+use RuntimeException;
 
 /**
  * Class SocketServer is an implementation of the Ratchet MessageComponentInterface and provides the connection layer between Laravel and Ratchet.
@@ -193,9 +195,17 @@ class SocketServer implements Server
      */
     private function protocol(SocketClient $client)
     {
+        if (empty($this->protocols)) {
+            throw new RuntimeException('No protocols registered.');
+        }
+
         $protocol = array_first($this->protocols, function ($_, $protocol) use ($client) {
             return $protocol == $client->protocol();
         });
+
+        if (is_null($protocol)) {
+            throw new ProtocolNotFoundException($client->protocol());
+        }
 
         return $this->app->make($protocol);
     }
