@@ -24,7 +24,11 @@ class ProtocolNotFoundException extends Exception
      */
     public function __construct($protocol)
     {
-        parent::__construct('Could not resolve protocol "' . $protocol . '"!');
+        if (is_null($protocol)) {
+            parent::__construct('No protocol specified.');
+        } else {
+            parent::__construct('Could not resolve protocol "' . $protocol . '"!');
+        }
         $this->protocol = $protocol;
     }
 
