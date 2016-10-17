@@ -58,6 +58,8 @@ class SetupSocketsCommand extends Command
         $this->setupMiddlewares();
         $this->setupHandlers();
         $this->setupCatchers();
+
+        $this->output->success('Setup done, enjoy sockets!');
     }
 
     /**
@@ -107,13 +109,6 @@ class SetupSocketsCommand extends Command
         $this->customProvider = 'app/Providers/SocketServiceProvider.php';
 
         $this->call('socket:provider', ['name' => 'SocketServiceProvider']);
-
-        if ($this->exists('config/app.php') && $this->confirm('Do you want to swap the default SocketServiceProvider with your new provider?', true)) {
-            $file = $this->getLaravel()->basePath() . '/config/app.php';
-            $config = file_get_contents($file);
-            $config = str_replace('\Experus\Sockets\SocketServiceProvider', '\App\Providers\SocketServiceProvider', $config);
-            file_put_contents($file, $config);
-        }
     }
 
     /**

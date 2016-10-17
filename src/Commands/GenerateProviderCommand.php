@@ -36,4 +36,19 @@ class GenerateProviderCommand extends AbstractGeneratorCommand
      * @var string
      */
     protected $template = 'Provider';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        parent::handle();
+
+        if ((is_dir('config/app.php') || is_file('config/app.php')) && $this->confirm('Do you want to swap the default SocketServiceProvider with your new provider?', true)) {
+            $file = $this->getLaravel()->basePath() . '/config/app.php';
+            $config = file_get_contents($file);
+            $config = str_replace('\Experus\Sockets\SocketServiceProvider', '\App\Providers\\' . $this->argument('name'), $config);
+            file_put_contents($file, $config);
+        }
+    }
 }
