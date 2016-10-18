@@ -112,16 +112,15 @@ class SocketKernel implements Kernel
      */
     public function init(Input $input, Output $output)
     {
+        $domain = $this->app->make(Repository::class)->get('app.url'); // get the app domain
         $this->input = $input;
         $this->output = new OutputStyle($input, $output);
         $this->server = $this->app->make(Server::class);
         $this->router = $this->app->make(Router::class);
-        $this->whitelist = new HttpServer(new OriginCheck(new WsServer($this->server), ['localhost']));
+        $this->whitelist = new HttpServer(new OriginCheck(new WsServer($this->server), ['localhost', $domain]));
         $this->blacklist = new IpBlackList($this->whitelist);
 
         $this->initRouter();
-
-        $this->allow($this->app->make(Repository::class)->get('app.url')); // allow the application to connect from it's own domain.
 
         return $this;
     }
@@ -155,7 +154,7 @@ class SocketKernel implements Kernel
      */
     public function allow($address)
     {
-        $this->whitelist->allowedOrigins[] = $address;
+        $this->whitelist->allowedOrigins[] = parse_url($address, PHP_URL_HOST) ?: $address;
     }
 
     /**
