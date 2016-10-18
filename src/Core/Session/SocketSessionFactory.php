@@ -7,6 +7,7 @@ use Guzzle\Http\Message\RequestInterface as Request;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\Encrypter;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Session\SessionManager;
 
 /**
@@ -38,15 +39,13 @@ class SocketSessionFactory
 
     /**
      * SocketSession constructor.
-     * @param Config $config
-     * @param SessionManager $session
-     * @param Encrypter $encrypter
+     * @param Application $app
      */
-    public function __construct(Config $config, SessionManager $session, Encrypter $encrypter)
+    public function __construct(Application $app)
     {
-        $this->cookie_name = $config->get('session.cookie');
-        $this->session = $session;
-        $this->encrypter = $encrypter;
+        $this->cookie_name = $app->make(Config::class)->get('session.cookie');
+        $this->session = new SessionManager($app);
+        $this->encrypter = $app->make(Encrypter::class);
     }
 
     /**
