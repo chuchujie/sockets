@@ -9,6 +9,7 @@ use Experus\Sockets\Contracts\Server\Server;
 use Experus\Sockets\Events\SocketServerClosedEvent;
 use Experus\Sockets\Events\SocketServerStartedEvent;
 use Illuminate\Console\OutputStyle;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Ratchet\Http\HttpServer;
 use Ratchet\Http\OriginCheck;
@@ -119,6 +120,8 @@ class SocketKernel implements Kernel
         $this->blacklist = new IpBlackList($this->whitelist);
 
         $this->initRouter();
+
+        $this->allow($this->app->make(Repository::class)->get('app.url')); // allow the application to connect from it's own domain.
 
         return $this;
     }
