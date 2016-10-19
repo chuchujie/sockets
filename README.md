@@ -30,7 +30,7 @@
 
 ### Roadmap
 
-- [ ] implement broadcasting, or accessing other sockets
+- [x] implement broadcasting, or accessing other sockets
 - [ ] implement channels
 - [ ] allow creating topics or something
 - [ ] prefix property on routes
