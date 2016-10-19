@@ -2,19 +2,14 @@
 
 namespace {{namespace}};
 
-use \Experus\Sockets\SocketProvider as ServiceProvider;
+use Experus\Sockets\Contracts\Exceptions\Handler;
+use Experus\Sockets\Core\Exceptions\DebugHandler;
+use Experus\Sockets\Core\Middlewares\SocketMiddlewareStack;
+use Experus\Sockets\Contracts\Middlewares\Stack;
+use \Experus\Sockets\SocketServiceProvider as ServiceProvider;
 
 class {{name}} extends ServiceProvider
 {
-    /**
-     * The middlewares to apply to incoming requests.
-     *
-     * @var array
-     */
-    protected $middlewares = [
-        // register your global middlewares here
-    ];
-
     /**
      * All the protocols supported by this application.
      *
@@ -29,5 +24,12 @@ class {{name}} extends ServiceProvider
      *
      * @var Handler
      */
-    protected $handler = ExceptionHandler::class; // set your own exception handling class here
+    protected $handler = DebugHandler::class; // set your own exception handling class here
+
+    /**
+     * The global middleware stack for the sockets runtime.
+     *
+     * @var Stack
+     */
+    protected $stack = SocketMiddlewareStack::class;
 }

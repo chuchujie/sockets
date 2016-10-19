@@ -1,0 +1,33 @@
+<?php
+
+namespace {{namespace}};
+
+use Experus\Sockets\Core\Middlewares\SocketMiddlewareStack as Stack;
+
+/**
+ * Class {{name}} provides easy customization of the middleware stack for sockets.
+ * @package {{namespace}}
+ */
+class {{name}} extends Stack
+{
+    /**
+     * The global middleware stack.
+     *
+     * @var array
+     */
+    protected $global = [];
+
+    /**
+     * All aliases for middlewares.
+     *
+     * @var array
+     */
+    protected $named = [];
+
+    /**
+     * All middleware groups.
+     *
+     * @var array
+     */
+    protected $groups = [];
+}

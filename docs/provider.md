@@ -3,7 +3,7 @@
 ### Basics
 
 As amazing as it sounds, sockets really only needs a serviceprovider installed to work. You can do most of the customalisation in that service provider. For now, there's three things you can customize in the service provider, each with it's own documentation in depth; we'll just cover how to set them up here:
-- [middlewares](middleware.md)
+- [middleware stack](middleware.md)
 - [protocols](protocols.md)
 - [exception handlers](exceptions.md)
 
@@ -38,23 +38,16 @@ For example, usually you'll create something like this in *app/Providers/* (this
 
 namespace App\Providers;
 
-use App\Sockets\Exceptions\ExceptionHandler;
 use Experus\Sockets\Contracts\Exceptions\Handler;
-use \Experus\Sockets\SocketProvider as ServiceProvider;
+use Experus\Sockets\Core\Exceptions\DebugHandler;
+use Experus\Sockets\Core\Middlewares\SocketMiddlewareStack;
+use Experus\Sockets\Contracts\Middlewares\Stack;
+use \Experus\Sockets\SocketServiceProvider as ServiceProvider;
 
-class SocketProvider extends ServiceProvider
+class SocketServiceProvider extends ServiceProvider
 {
     /**
-     * The middlewares to apply to incoming requests.
-     *
-     * @var array
-     */
-    protected $middlewares = [
-        // register your global middlewares here
-    ];
-
-    /**
-     * The supplied protocol stack.
+     * All the protocols supported by this application.
      *
      * @var array
      */
@@ -67,7 +60,14 @@ class SocketProvider extends ServiceProvider
      *
      * @var Handler
      */
-    protected $handler = ExceptionHandler::class; // set your own exception handling class here
+    protected $handler = DebugHandler::class; // set your own exception handling class here
+
+    /**
+     * The global middleware stack for the sockets runtime.
+     *
+     * @var Stack
+     */
+    protected $stack = SocketMiddlewareStack::class;
 }
 ```
 

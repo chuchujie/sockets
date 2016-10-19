@@ -1,7 +1,7 @@
 <?php
 // Created by dealloc. All rights reserved.
 
-namespace Experus\Sockets\Commands;
+namespace Experus\Sockets\Commands\Generators;
 
 /**
  * Class GenerateCatcherCommand generates catchers.

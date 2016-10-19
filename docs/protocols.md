@@ -25,15 +25,50 @@ class FooProtocol implements Protocol
 {
 
     /**
-     * Extract the intended route from the request.
-     *
-     * @param SocketRequest $request
-     * @return string
-     */
-    public function route(SocketRequest $request)
-    {
-        return 'foo'; // every route is foo
-    }
+         * Extract the intended route from the request.
+         *
+         * @param SocketRequest $request
+         * @return string
+         */
+        public function route(SocketRequest $request)
+        {
+            return $this->parse($request)->to; // get the 'to' property from JSON
+        }
+    
+        /**
+         * Return the body of the request, stripping out all meta data such as route, auth, ...
+         *
+         * @param SocketRequest $request
+         * @return string
+         */
+        public function body(SocketRequest $request)
+        {
+            return $this->parse($request)->data; // get the 'data' property from JSON
+        }
+    
+        /**
+         * Return the parsed form of the request body as an array, an object or null if this protocol does not support parsing.
+         *
+         * @param SocketRequest $request
+         * @return array|null|object
+         * @throws ParseException thrown when parsing fails.
+         */
+        public function parse(SocketRequest $request)
+        {
+            return json_decode($request->raw());
+        }
+    
+        /**
+         * Serialize a response into the string representation that can be flushed into the sockets.
+         *
+         * @param array|null|object $data
+         * @return string
+         * @throws SerializeException when the given response cannot be serialized with this protocol.
+         */
+        public function serialize($data)
+        {
+            return json_encode($data);
+        }
 }
 ```
 
@@ -62,7 +97,20 @@ For more information on websockets on the clientside, you can start [here](https
 
 sockets comes with a default protocol to play around with, called `experus` internally. This section will shorty describe how this protocol works, for all you know it's just fine for you and you don't need a custom protocol.
 
-**this section is incomplete due the Experus protocol still being under development**
+The experus protocol requires you to send your data to the server in json format, with the following properties present:
+- **to** this is the property ExperusProtocol will use to extract which route you intend to send data to.
+- **data** is the property that Experus views as the effective payload of the request.
+ 
+An example of a request with the Experus protocol could look like this:
+```json
+{
+    "to": "foo",
+    "data": {
+        "hello": "world"
+    }
+}
+```
+In the example above, the ExperusProtocol will dispatch to the `foo` route and the body of the request will yield `{"hello":"world"}`.
 
 ### Generating protocols
 

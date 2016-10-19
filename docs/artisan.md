@@ -16,6 +16,16 @@ Let's break those arguments down:
 - **port** allows you to specify an alternative port (default 9999). example: `php artisan socket:serve --port=1234`
 - **local** allows you to run the server locally (by default available for everyone). example: `php artisan socket:serve --local`
 
+### Setup command
+
+Sockets provides a command that will help you setup your laravel environment for working with WebSockets in one go. The setup command will ask you what you want to setup, and will guide you through setting up your environment and structure.
+
+The syntax of the command looks like this:
+```sh
+php artisan socket:setup
+```
+That's it, no arguments needed.
+
 ### Generate controller command
 
 The controller command generates the boilerplate code for setting up controllers that handle incoming socket requests. It sets up directory structures for you and provides you with an empty controller class so you can hack away.
@@ -45,6 +55,21 @@ Let's break those arguments down:
 - **name** the name of the middleware to generate (*required*). Example: `php artisan socket:middleware SocketMiddleware`
 - **namespace** Allows you to specify a custom namespace (default: `App\Sockets\Middlewares`). Example: `php artisan socket:middleware SocketMiddleware --namespace='Foo\Bar\Baz'`
 - **dir** Allows you to specify a different root directory (default: *app/*). Example: `php artisan socket:middleware SocketMiddleware --dir=src`
+
+### Generate stack command
+
+The stack command generates the boilerplate code for setting up stacks. It sets up directory structures for you and provides you with an empty stack class so you can hack away.
+
+The generator will deduce where it needs to put the generated stack based on the root directory and the namespace.
+
+The syntax of the command looks like this:
+```sh
+php artisan socket:stack {name} {--namespace=} {--dir}
+```
+Let's break those arguments down:
+- **name** the name of the stack to generate (*required*). Example: `php artisan socket:stack SocketStack`
+- **namespace** Allows you to specify a custom namespace (default: `App\Sockets\Middlewares`). Example: `php artisan socket:stack SocketStack --namespace='Foo\Bar\Baz'`
+- **dir** Allows you to specify a different root directory (default: *app/*). Example: `php artisan socket:stack SocketStack --dir=src`
 
 ### Generate serviceprovider command
 

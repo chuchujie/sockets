@@ -44,18 +44,6 @@ $router->socket('foo', [
 ]);
 ```
 
-### Channels
-
-You can group a set of routes together in a *channel* using the `channel` method. **Currently channels are not implemented in the sockets runtime and registering sockets in a channel won't do anything. The method is defined for future use.**
-
-You can define a channel and register routes to it very similiar to [groups](#Groups):
-```php
-$router->channel('bar', function($router) {
-    $router->socket('foo', ['uses' => 'SocketController@foo']);
-});
-```
-This defines a channel *bar* with a route *foo* in it.
-
 ### Generating controllers
 
 Since writing controller boilerplate code is tedious and not exactly fun, sockets provides you with a command that generates the boilerplate code for you.

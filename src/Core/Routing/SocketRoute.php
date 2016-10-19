@@ -4,6 +4,7 @@
 namespace Experus\Sockets\Core\Routing;
 
 use Experus\Sockets\Core\Middlewares\MiddlewareDispatcher;
+use Experus\Sockets\Core\Middlewares\Pipeline;
 use Experus\Sockets\Core\Server\SocketRequest;
 use Experus\Sockets\Exceptions\InvalidActionException;
 use Illuminate\Contracts\Foundation\Application;
@@ -18,7 +19,40 @@ use RuntimeException;
  */
 class SocketRoute
 {
-    use MiddlewareDispatcher;
+    /**
+     * The key the route will use to search for the name property.
+     *
+     * @var string
+     */
+    const NAME = 'name';
+
+    /**
+     * The key the route will use to search for the middlewares property.
+     *
+     * @var string
+     */
+    const MIDDLEWARE = 'middlewares';
+
+    /**
+     * The key the route will use to search for the action property.
+     *
+     * @var string
+     */
+    const ACTION = 'uses';
+
+    /**
+     * The key the route will use to search for the namespace property.
+     *
+     * @var string
+     */
+    const DOMAIN = 'namespace';
+
+    /**
+     * The key the route will use to search for the prefix property.
+     *
+     * @var string
+     */
+    const PREFIX = 'prefix';
 
     /**
      * All the attributes of this route.
@@ -42,17 +76,24 @@ class SocketRoute
     private $app;
 
     /**
+     * The middleware pipeline.
+     *
+     * @var Pipeline
+     */
+    private $pipeline;
+
+    /**
      * SocketRoute constructor.
      * @param string $path
      * @param array $action
-     * @param string $channel
      * @param array $attributes
      * @param Application $app
      */
-    public function __construct($path, array $action, $channel = '', $attributes = [], Application $app)
+    public function __construct($path, array $action, $attributes = [], Application $app)
     {
-        $this->path = $path;
         $this->app = $app;
+        $this->path = $path;
+        $this->pipeline = new Pipeline();
         $this->attributes = array_merge($attributes, $action, compact('channel'));
     }
 
@@ -64,7 +105,7 @@ class SocketRoute
      */
     public function match(SocketRequest $request)
     {
-        return ($this->path == $request->path());
+        return ($this->path() == $request->path());
     }
 
     /**
@@ -76,7 +117,7 @@ class SocketRoute
     public function run(SocketRequest $request)
     {
         if (!empty($this->middlewares())) {
-            $response = $this->runThrough($this->middlewares(), $request);
+            $response = $this->pipeline->through($this->middlewares())->run($request);
 
             if (!is_null($response)) {
                 return $response;
@@ -97,7 +138,11 @@ class SocketRoute
      */
     public function name()
     {
-        return $this->path;
+        if (isset($this->attributes[self::NAME])) {
+            return $this->attributes[self::NAME];
+        }
+
+        return $this->path();
     }
 
     /**
@@ -107,7 +152,7 @@ class SocketRoute
      */
     private function isControllerAction()
     {
-        return is_string($this->attributes['uses']);
+        return is_string($this->attributes[self::ACTION]);
     }
 
     /**
@@ -117,12 +162,12 @@ class SocketRoute
      */
     private function middlewares()
     {
-        if (isset($this->attributes['middlewares'])) {
-            if (is_string($this->attributes['middlewares'])) {
-                return [$this->attributes['middlewares']];
+        if (isset($this->attributes[self::MIDDLEWARE])) {
+            if (is_string($this->attributes[self::MIDDLEWARE])) {
+                return [$this->attributes[self::MIDDLEWARE]];
             }
 
-            return $this->attributes['middlewares'];
+            return $this->attributes[self::MIDDLEWARE];
         }
 
         return [];
@@ -136,13 +181,14 @@ class SocketRoute
      */
     private function dispatchController(SocketRequest $request)
     {
-        if (!str_contains($this->attributes['uses'], '@')) {
+        if (!str_contains($this->attributes[self::ACTION], '@')) {
             throw new InvalidActionException($this->name());
         }
 
-        list($controller, $action) = explode('@', $this->attributes['uses']);
+        list($controller, $action) = explode('@', $this->attributes[self::ACTION]);
+        $namespace = (isset($this->attributes[self::DOMAIN]) ? $this->attributes[self::DOMAIN] : '');
 
-        $controller = $this->app->make($this->attributes['namespace'] . '\\' . $controller);
+        $controller = $this->app->make($namespace . '\\' . $controller);
         $method = new ReflectionMethod($controller, $action);
         $parameters = $this->buildParameters($method, $request);
 
@@ -158,11 +204,11 @@ class SocketRoute
      */
     private function dispatchCallable(SocketRequest $request)
     {
-        if (!is_callable($this->attributes['uses'])) {
+        if (!is_callable($this->attributes[self::ACTION])) {
             throw new InvalidActionException($this->name());
         }
 
-        $method = new ReflectionFunction($this->attributes['uses']);
+        $method = new ReflectionFunction($this->attributes[self::ACTION]);
 
         $parameters = $this->buildParameters($method, $request);
 
@@ -198,5 +244,17 @@ class SocketRoute
         }
 
         return $parameters;
+    }
+
+    /**
+     * Get the path of this route.
+     *
+     * @return string
+     */
+    public function path()
+    {
+        $prefix = (isset($this->attributes[self::PREFIX]) ? $this->attributes[self::PREFIX] : '');
+
+        return $prefix . $this->path;
     }
 }
