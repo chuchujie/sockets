@@ -107,7 +107,8 @@ class SocketServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../files/socket' => base_path('socket'),
-            __DIR__ . '/../files/routes.php' => base_path('routes/socket.php'),
+            __DIR__ . '/../files/routes.php' => base_path('routes/sockets.php'),
+            __DIR__ . '/../files/config.php' => base_path('config/sockets.php'),
         ], 'sockets');
     }
 
