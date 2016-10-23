@@ -93,6 +93,13 @@ class SocketKernel implements Kernel
     private $whitelist;
 
     /**
+     * The configuration manager.
+     *
+     * @var Repository
+     */
+    private $config;
+
+    /**
      * SocketKernel constructor.
      * @param Application $app
      */
@@ -112,13 +119,17 @@ class SocketKernel implements Kernel
      */
     public function init(Input $input, Output $output)
     {
-        $domain = $this->app->make(Repository::class)->get('app.url'); // get the app domain
         $this->input = $input;
+        $this->config = $this->app->make(Repository::class);
         $this->output = new OutputStyle($input, $output);
         $this->server = $this->app->make(Server::class);
         $this->router = $this->app->make(Router::class);
-        $this->whitelist = new HttpServer(new OriginCheck(new WsServer($this->server), ['localhost', $domain]));
+        $this->whitelist = new HttpServer(new OriginCheck(new WsServer($this->server), $this->config->get('sockets.whitelist')));
         $this->blacklist = new IpBlackList($this->whitelist);
+
+        foreach ($this->config->get('sockets.blacklist') as $blocked) {
+            $this->block($blocked);
+        }
 
         $this->initRouter();
 
@@ -192,7 +203,7 @@ class SocketKernel implements Kernel
             return $option;
         }
 
-        return 9999;
+        return $this->config->get('sockets.port', 9999);
     }
 
     /**
@@ -208,6 +219,6 @@ class SocketKernel implements Kernel
             return '127.0.0.1';
         }
 
-        return '0.0.0.0';
+        return $this->config->get('sockets.host', '0.0.0.0');
     }
 }
