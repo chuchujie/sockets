@@ -34,6 +34,6 @@
 - [x] implement broadcasting, or accessing other sockets
 - [ ] implement channels
 - [ ] allow creating topics or something
-- [ ] prefix property on routes
 - [ ] maybe write a client side library for sockets?
-- [ ] extend request to expose "user" if applicable (from session)
+- [ ] clustering
+- [ ] rewrite cboden/ratchet to deal with outdated libraries and provide lower level access.
