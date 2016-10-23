@@ -24,6 +24,7 @@
 - [Events](docs/events.md)
 - [Exceptions](docs/exceptions.md)
 - [Whitelisting and blacklisting](docs/listing.md)
+- [config](docs/config.md)
 - [CLI](docs/artisan.md)
 - [Gotchas](docs/gotchas.md)
 - [Roadmap](#roadmap)

@@ -101,13 +101,13 @@ class SocketServiceProvider extends ServiceProvider
 
     /**
      * Expose the configuration exports.
-     * @todo remove base_path calls to remove hard dependency on Laravel framework.
      */
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../files/socket' => base_path('socket'),
-            __DIR__ . '/../files/routes.php' => base_path('routes/socket.php'),
+            __DIR__ . '/../files/socket' => $this->app->basePath() . '/socket',
+            __DIR__ . '/../files/routes.php' => $this->app->basePath() . '/routes/sockets.php',
+            __DIR__ . '/../files/config.php' => $this->app->basePath() . '/config/sockets.php',
         ], 'sockets');
     }
 
